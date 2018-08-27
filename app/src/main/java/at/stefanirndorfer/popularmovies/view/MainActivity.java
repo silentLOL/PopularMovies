@@ -29,13 +29,14 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
     private GridLayoutManager mGridLayoutManager;
     private ThumbnailsAdapter mThumbnailsAdapter;
     private boolean mCurrentlyLoading;
-    int pastVisiblesItems, visibleItemCount, totalItemCount;
+    int pastVisibleItems, visibleItemCount, totalItemCount;
     private RecyclerView.OnScrollListener mRecyclerViewOnScrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG, "onCreate");
         setUpRecycleView();
         //TODO: Error message display
         initViewModel();
@@ -53,8 +54,6 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
                     Log.d(TAG, "Received sort-by from settings: " + sortBy);
                     boolean needsRequest = false;
                     if (!sortBy.equals(viewModel.getSortMoviesBy().toString())) {
-                        // we need to reset the data in our recycleview adapter
-                        //mThumbnailsAdapter.setThumbnailData(new ThumbnailWrapper[]{});
                         //TODO: Show spinner
                         needsRequest = true;
                     }
@@ -72,12 +71,14 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
     }
 
     private void requestMovieData() {
+        Log.d(TAG, "Requesting Movie Data");
         mCurrentlyLoading = true;
         viewModel.requestMovieData();
     }
 
 
     private void setUpRecycleView() {
+        Log.d(TAG, "Setting up RecyclerView");
         mRecyclerViewMovies = findViewById(R.id.recyclerview_movies);
         mGridLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerViewOnScrollListener = initOnScrollListener();
@@ -96,10 +97,10 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
                 {
                     visibleItemCount = mGridLayoutManager.getChildCount();
                     totalItemCount = mGridLayoutManager.getItemCount();
-                    pastVisiblesItems = mGridLayoutManager.findFirstVisibleItemPosition();
+                    pastVisibleItems = mGridLayoutManager.findFirstVisibleItemPosition();
 
                     if (!mCurrentlyLoading) {
-                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                             Log.v(TAG, "Requesting more movie data");
                             requestMovieData();
                         }
@@ -121,8 +122,8 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
         subscribe();
     }
 
-    //todo: subscribe to data
     private void subscribe() {
+        Log.d(TAG, "Subcribeing to observable values");
         final Observer<ThumbnailWrapper[]> movieThumbnailsOutputObserver = thumbnailWrappers -> {
             Log.d(TAG, "Movie data (re)loaded");
             mThumbnailsAdapter.setThumbnailData(thumbnailWrappers);
@@ -136,7 +137,10 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
                 showInternetDialogue();
             } else {
                 // we only request movie data if internet connection is given
-                requestMovieData();
+                Log.d(TAG, "We have Internet! Requesting Movie data");
+                if (viewModel.getGlobalMovieList() == null || viewModel.getGlobalMovieList().isEmpty()) {
+                    requestMovieData();
+                }
             }
         };
         viewModel.isInternetConnected().observe(this, hasInternetObserver);
@@ -172,4 +176,28 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
     public void onDialogDone() {
         viewModel.checkInternetConnection();
     }
+
+    /**
+     * Life Cycle Handling
+     */
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+    }
+
 }

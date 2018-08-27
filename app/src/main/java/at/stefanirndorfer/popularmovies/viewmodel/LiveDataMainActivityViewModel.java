@@ -2,11 +2,9 @@ package at.stefanirndorfer.popularmovies.viewmodel;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import at.stefanirndorfer.popularmovies.model.Movie;
 import at.stefanirndorfer.popularmovies.model.MovieQueryResponse;
@@ -14,7 +12,7 @@ import at.stefanirndorfer.popularmovies.model.MoviesOrder;
 import at.stefanirndorfer.popularmovies.model.ThumbnailWrapper;
 import at.stefanirndorfer.popularmovies.network.RequestMoviesService;
 import at.stefanirndorfer.popularmovies.network.RetrofitClientInstance;
-import at.stefanirndorfer.popularmovies.utils.PopularMoviesConstants;
+import at.stefanirndorfer.popularmovies.utils.ApiConstants;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,7 +42,8 @@ public class LiveDataMainActivityViewModel extends InternetAwareLiveDataViewMode
             page = mLatestQueryData.getPage() + 1;
         }
         RequestMoviesService service = RetrofitClientInstance.getRetrofitInstance().create(RequestMoviesService.class);
-        Call<MovieQueryResponse> call = service.getMovies(PopularMoviesConstants.API_KEY, mSortBy.toString(), false, page);
+        Call<MovieQueryResponse> call = service.getMovies(ApiConstants.API_KEY, mSortBy.toString(), false, page);
+        Log.d(TAG, call.request().toString());
         call.enqueue(new Callback<MovieQueryResponse>() {
             @Override
             public void onResponse(Call<MovieQueryResponse> call, Response<MovieQueryResponse> response) {
@@ -138,5 +137,18 @@ public class LiveDataMainActivityViewModel extends InternetAwareLiveDataViewMode
         }
     }
 
+    public ArrayList<Movie> getGlobalMovieList() {
+        return mGlobalMovieList;
+    }
 
+
+    /**
+     * LifeCycle handling
+     */
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        Log.d(TAG, "onCleared");
+    }
 }
