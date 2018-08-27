@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/pb_loading_progress"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/iv_movie_poster"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="3dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/image_thumbnail_content_description"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_error_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="100dp"
+            android:text="@string/error_message"
+            android:textColor="@android:color/holo_red_light"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="230dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="30dp"
+            android:paddingRight="45dp"
+            android:background="@android:color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/row_margin_top"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/label_vote_count_tv"
+                    android:layout_width="@dimen/label_width"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_vote_count_label"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/vote_count_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/row_margin_top"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/label_average_vote_tv"
+                    android:layout_width="@dimen/label_width"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_average_vote_label"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/average_vote_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/row_margin_top"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/label_popularity_tv"
+                    android:layout_width="@dimen/label_width"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_popularity_label"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/popularity_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/row_margin_top"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/label_original_language_tv"
+                    android:layout_width="@dimen/label_width"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_original_language_label"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/original_language_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/row_margin_top"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/label_original_title_tv"
+                    android:layout_width="@dimen/label_width"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_original_title_label"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/original_title_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/row_margin_top"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/label_genres_tv"
+                    android:layout_width="@dimen/label_width"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_genres_label"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/genres_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/row_margin_top"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/label_overview_tv"
+                    android:layout_width="@dimen/label_width"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_overview_label"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/overview_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/row_margin_top"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/label_release_date_tv"
+                    android:layout_width="@dimen/label_width"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_release_date_label"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/release_date_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</FrameLayout>

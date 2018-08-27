@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.SettingsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="15dp">
+
+        <TextView
+            android:id="@+id/tv_sort_creteria_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sort_creteria_label_text" />
+
+        <RadioGroup
+            android:id="@+id/cort_criteria_radio_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:checkedButton="@+id/rb_popularity"
+            android:visibility="visible">
+
+            <RadioButton
+                android:id="@+id/rb_popularity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onPopularitySelected"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="@string/popularity"
+                android:visibility="visible" />
+
+            <RadioButton
+                android:id="@+id/rb_vote_average"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onVoteAverageSelected"
+                android:layout_weight="1"
+                android:checked="false"
+                android:text="@string/vote_average"
+                android:visibility="visible" />
+        </RadioGroup>
+    </LinearLayout>
+
+</FrameLayout>
