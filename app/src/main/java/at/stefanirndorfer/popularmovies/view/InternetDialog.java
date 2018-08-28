@@ -2,10 +2,12 @@ package at.stefanirndorfer.popularmovies.view;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,12 +32,17 @@ public class InternetDialog extends DialogFragment {
         final AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setView(rootView)
                 .setTitle(R.string.internet_dialog_title)
+                .setMessage(R.string.internet_dialog_text)
                 .setCancelable(false)
                 .setPositiveButton(R.string.got_it, null)
                 .create();
-        alertDialog.setCanceledOnTouchOutside(true);
-        alertDialog.setOnShowListener(dialog -> {
-            onDialogShow(alertDialog);
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setOnShowListener(dialog -> onDialogShow(alertDialog));
+        alertDialog.setOnKeyListener((arg0, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                onDoneClicked();
+            }
+            return true;
         });
         return alertDialog;
     }
@@ -48,12 +55,5 @@ public class InternetDialog extends DialogFragment {
     private void onDoneClicked() {
         this.listener.onDialogDone();
         dismiss();
-    }
-
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return LayoutInflater.from(getContext()).inflate(R.layout.internet_dialog, container, false);
     }
 }
