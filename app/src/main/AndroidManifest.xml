@@ -22,15 +22,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.DetailActivity"
-            android:parentActivityName=".view.MainActivity">
+            android:name=".view.DetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.MainActivity" />
         </activity>
         <activity
-            android:name=".view.SettingsActivity"
-            android:parentActivityName=".view.MainActivity">
+            android:name=".view.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.MainActivity" />

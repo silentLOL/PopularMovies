@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import at.stefanirndorfer.popularmovies.R;
@@ -25,7 +27,6 @@ public class InternetDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        initViews();
         final AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setView(rootView)
                 .setTitle(R.string.internet_dialog_title)
@@ -49,7 +50,10 @@ public class InternetDialog extends DialogFragment {
         dismiss();
     }
 
-    private void initViews() {
-        rootView = LayoutInflater.from(getContext()).inflate(R.layout.internet_dialog, null, false);
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return LayoutInflater.from(getContext()).inflate(R.layout.internet_dialog, container, false);
     }
 }
