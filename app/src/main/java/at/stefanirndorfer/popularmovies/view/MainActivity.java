@@ -63,7 +63,8 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
                         viewModel.setSortMoviesBy(MoviesOrder.TOP_RATED);
                     }
                     if (needsRequest) {
-                        requestMovieData();
+                        //this will trigger the request after successful internet-check
+                        viewModel.checkInternetConnection();
                     }
                 }
             }
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
                     if (!mCurrentlyLoading) {
                         if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                             Log.v(TAG, "Requesting more movie data");
-                            requestMovieData();
+                            viewModel.checkInternetConnection();
                         }
                     }
                 }
@@ -138,9 +139,7 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
             } else {
                 // we only request movie data if internet connection is given
                 Log.d(TAG, "We have Internet! Requesting Movie data");
-                if (viewModel.getGlobalMovieList() == null || viewModel.getGlobalMovieList().isEmpty()) {
-                    requestMovieData();
-                }
+                requestMovieData();
             }
         };
         viewModel.isInternetConnected().observe(this, hasInternetObserver);
