@@ -35,10 +35,11 @@
 
             <TextView
                 android:id="@+id/tv_error_message"
-                android:layout_width="wrap_content"
+                android:layout_width="102dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="75dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="50dp"
+                android:textAlignment="center"
                 android:text="@string/error_message"
                 android:textColor="@android:color/holo_red_light"
                 android:visibility="invisible" />
@@ -139,7 +140,7 @@
             android:background="@android:color/white"
             android:orientation="vertical"
             android:paddingEnd="45dp"
-            android:paddingStart="15dp">
+            android:paddingStart="23dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -159,7 +160,8 @@
                 <TextView
                     android:id="@+id/overview_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/detail_tv_padding" />
             </LinearLayout>
 
 
@@ -181,7 +183,8 @@
                 <TextView
                     android:id="@+id/original_language_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/detail_tv_padding" />
             </LinearLayout>
 
             <LinearLayout
@@ -202,7 +205,8 @@
                 <TextView
                     android:id="@+id/original_title_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/detail_tv_padding" />
             </LinearLayout>
 
             <LinearLayout
@@ -223,7 +227,8 @@
                 <TextView
                     android:id="@+id/genres_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/detail_tv_padding" />
             </LinearLayout>
 
 
@@ -245,7 +250,8 @@
                 <TextView
                     android:id="@+id/release_date_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/detail_tv_padding" />
             </LinearLayout>
 
 
