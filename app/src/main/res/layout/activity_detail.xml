@@ -5,6 +5,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -17,7 +18,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="54dp"
                 android:visibility="visible" />
 
             <ImageView
@@ -25,8 +26,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="150dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="3dp"
                 android:layout_marginStart="15dp"
+                android:layout_marginTop="3dp"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/image_thumbnail_content_description"
                 android:scaleType="centerCrop"
@@ -46,6 +47,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="12dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -59,12 +62,17 @@
                     android:layout_width="@dimen/label_width"
                     android:layout_height="wrap_content"
                     android:text="@string/detail_vote_count_label"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/label_text_size"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/vote_count_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/vote_value_size"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -78,12 +86,17 @@
                     android:layout_width="@dimen/label_width"
                     android:layout_height="wrap_content"
                     android:text="@string/detail_average_vote_label"
-                    android:textStyle="bold" />
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/label_text_size"
+                    android:textStyle="bold" />/>
 
                 <TextView
                     android:id="@+id/average_vote_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/vote_value_size"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -98,12 +111,17 @@
                     android:layout_width="@dimen/label_width"
                     android:layout_height="wrap_content"
                     android:text="@string/detail_popularity_label"
-                    android:textStyle="bold" />
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/label_text_size"
+                    android:textStyle="bold" />/>
 
                 <TextView
                     android:id="@+id/popularity_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/vote_value_size"
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -113,7 +131,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="150dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -121,7 +139,28 @@
             android:background="@android:color/white"
             android:orientation="vertical"
             android:paddingEnd="45dp"
-            android:paddingStart="30dp">
+            android:paddingStart="15dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/row_margin_top"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/label_overview_tv"
+                    android:layout_width="@dimen/label_width"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_overview_label"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/label_text_size"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/overview_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
 
             <LinearLayout
@@ -135,6 +174,8 @@
                     android:layout_width="@dimen/label_width"
                     android:layout_height="wrap_content"
                     android:text="@string/detail_original_language_label"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/label_text_size"
                     android:textStyle="bold" />
 
                 <TextView
@@ -154,6 +195,8 @@
                     android:layout_width="@dimen/label_width"
                     android:layout_height="wrap_content"
                     android:text="@string/detail_original_title_label"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/label_text_size"
                     android:textStyle="bold" />
 
                 <TextView
@@ -173,6 +216,8 @@
                     android:layout_width="@dimen/label_width"
                     android:layout_height="wrap_content"
                     android:text="@string/detail_genres_label"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/label_text_size"
                     android:textStyle="bold" />
 
                 <TextView
@@ -181,24 +226,6 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/row_margin_top"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/label_overview_tv"
-                    android:layout_width="@dimen/label_width"
-                    android:layout_height="wrap_content"
-                    android:text="@string/detail_overview_label"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/overview_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -211,6 +238,8 @@
                     android:layout_width="@dimen/label_width"
                     android:layout_height="wrap_content"
                     android:text="@string/detail_release_date_label"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/label_text_size"
                     android:textStyle="bold" />
 
                 <TextView

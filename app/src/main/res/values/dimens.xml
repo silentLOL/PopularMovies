@@ -2,4 +2,6 @@
 <resources>
     <dimen name="row_margin_top">10dp</dimen>
     <dimen name="label_width">100dp</dimen>
+    <dimen name="vote_value_size">22sp</dimen>
+    <dimen name="label_text_size">12sp</dimen>
 </resources>
