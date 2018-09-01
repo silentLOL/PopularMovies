@@ -38,7 +38,7 @@
                 android:onClick="onVoteAverageSelected"
                 android:layout_weight="1"
                 android:checked="false"
-                android:text="@string/vote_average"
+                android:text="@string/top_rated"
                 android:visibility="visible" />
         </RadioGroup>
     </LinearLayout>

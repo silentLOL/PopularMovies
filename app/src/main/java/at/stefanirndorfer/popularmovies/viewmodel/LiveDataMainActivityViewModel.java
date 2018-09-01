@@ -42,7 +42,7 @@ public class LiveDataMainActivityViewModel extends InternetAwareLiveDataViewMode
             page = mLatestQueryData.getPage() + 1;
         }
         RequestMoviesService service = RetrofitClientInstance.getRetrofitInstance().create(RequestMoviesService.class);
-        Call<MovieQueryResponse> call = service.getMovies(ApiConstants.API_KEY, mSortBy.toString(), false, page);
+        Call<MovieQueryResponse> call = service.getMovies(mSortBy.toString(), ApiConstants.API_KEY, page);
         Log.d(TAG, call.request().toString());
         call.enqueue(new Callback<MovieQueryResponse>() {
             @Override
