@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate");
         setUpRecycleView();
-        //TODO: Error message display
         initViewModel();
         viewModel.checkInternetConnection();
     }
@@ -155,8 +154,7 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
-            intent.putExtra(Intent.EXTRA_TEXT, viewModel.getSortMoviesBy().toString());
-            startActivityForResult(intent, REQUEST_CODE_SORT_BY);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
