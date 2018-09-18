@@ -1,11 +1,16 @@
 package at.stefanirndorfer.popularmovies.viewmodel;
 
+import android.app.Activity;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.content.SharedPreferences;
+import android.support.v7.preference.CheckBoxPreference;
+import android.support.v7.preference.Preference;
 import android.util.Log;
 
 import java.util.ArrayList;
 
+import at.stefanirndorfer.popularmovies.R;
 import at.stefanirndorfer.popularmovies.model.Movie;
 import at.stefanirndorfer.popularmovies.model.MovieQueryResponse;
 import at.stefanirndorfer.popularmovies.model.MoviesOrder;
@@ -17,7 +22,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LiveDataMainActivityViewModel extends InternetAwareLiveDataViewModel {
+public class LiveDataMainActivityViewModel extends InternetAwareLiveDataViewModel implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = LiveDataMainActivityViewModel.class.getName();
     public static final MoviesOrder DEFAULT_ORDER = MoviesOrder.POPULAR;
@@ -100,7 +105,7 @@ public class LiveDataMainActivityViewModel extends InternetAwareLiveDataViewMode
             }
         }
         //this should never be the case
-        Log.e(TAG, "Selected Moviedata not available!");
+        Log.e(TAG, "Selected Movie data not available!");
         return null;
     }
 
@@ -150,5 +155,13 @@ public class LiveDataMainActivityViewModel extends InternetAwareLiveDataViewMode
     protected void onCleared() {
         super.onCleared();
         Log.d(TAG, "onCleared");
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(R.string.pref_order_key)) {
+            PopularMoviesNetworkUtils.startImmediateSync(activity);
+        }
+
     }
 }
