@@ -15,4 +15,13 @@ public enum MoviesOrder {
         return name;
     }
 
+    public static MoviesOrder getMovieOrderByString(String string){
+        for (MoviesOrder currElem : MoviesOrder.values()) {
+            if (currElem.toString().equalsIgnoreCase(string)) {
+                return currElem;
+            }
+        }
+        return null;
+    }
+
 }

@@ -3,7 +3,9 @@ package at.stefanirndorfer.popularmovies.view;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,15 +16,13 @@ import android.view.MenuItem;
 import at.stefanirndorfer.popularmovies.R;
 import at.stefanirndorfer.popularmovies.adapter.ThumbnailsAdapter;
 import at.stefanirndorfer.popularmovies.model.Movie;
-import at.stefanirndorfer.popularmovies.model.MoviesOrder;
 import at.stefanirndorfer.popularmovies.model.ThumbnailWrapper;
 import at.stefanirndorfer.popularmovies.viewmodel.LiveDataMainActivityViewModel;
 
-public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter.ThumbnailsAdapterOnClickHandler, InternetDialogListener {
+public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter.ThumbnailsAdapterOnClickHandler, InternetDialogListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = MainActivity.class.getName();
     private static final String INTERNET_DIALOG_TAG = "internet_dialog_tag";
-    private static final int REQUEST_CODE_SORT_BY = 1;
 
     private LiveDataMainActivityViewModel viewModel;
     private RecyclerView mRecyclerViewMovies;
@@ -39,35 +39,18 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
         Log.d(TAG, "onCreate");
         setUpRecycleView();
         initViewModel();
+        setupSharedPreferences();
         viewModel.checkInternetConnection();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult is being called.");
-        //super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_SORT_BY) {
-            if (resultCode == RESULT_OK) {
-                if (data != null && data.hasExtra("movieOrder")) {
-                    String sortBy = data.getStringExtra("movieOrder");
-                    Log.d(TAG, "Received sort-by from settings: " + sortBy);
-                    boolean needsRequest = false;
-                    if (!sortBy.equals(viewModel.getSortMoviesBy().toString())) {
-                        //TODO: Show spinner
-                        needsRequest = true;
-                    }
-                    if (sortBy.equals(MoviesOrder.POPULAR.toString())) {
-                        viewModel.setSortMoviesBy(MoviesOrder.POPULAR);
-                    } else {
-                        viewModel.setSortMoviesBy(MoviesOrder.TOP_RATED);
-                    }
-                    if (needsRequest) {
-                        //this will trigger the request after successful internet-check
-                        viewModel.checkInternetConnection();
-                    }
-                }
-            }
-        }
+    private void setupSharedPreferences() {
+        // Get all of the values from shared preferences to set it up
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        viewModel.setSortMoviesBy(sharedPreferences.getString(getString(R.string.pref_order_key),
+                getResources().getString(R.string.pref_order_popular_value)));
+
+        // Register the listener
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     private void requestMovieData() {
@@ -119,10 +102,10 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
 
     private void initViewModel() {
         viewModel = ViewModelProviders.of(this).get(LiveDataMainActivityViewModel.class);
-        subscribe();
+        subscribeOnLiveData();
     }
 
-    private void subscribe() {
+    private void subscribeOnLiveData() {
         Log.d(TAG, "Subcribeing to observable values");
         final Observer<ThumbnailWrapper[]> movieThumbnailsOutputObserver = thumbnailWrappers -> {
             Log.d(TAG, "Movie data (re)loaded");
@@ -174,6 +157,19 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
         viewModel.checkInternetConnection();
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.pref_order_key))) {
+            String newOrder = sharedPreferences.getString(getString(R.string.pref_order_key), getResources().getString(R.string.pref_order_popular_value));
+            Log.d(TAG, "Setting movie order to " + newOrder);
+            String currentOrder = viewModel.getSortMoviesBy().toString();
+            if (!currentOrder.equals(newOrder)) {
+                viewModel.setSortMoviesBy(newOrder);
+                viewModel.checkInternetConnection();
+            }
+        }
+    }
+
     /**
      * Life Cycle Handling
      */
@@ -195,6 +191,9 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
+        //unregister listener
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
     }
+
 
 }
