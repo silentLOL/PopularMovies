@@ -3,17 +3,17 @@ package at.stefanirndorfer.popularmovies.view;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import at.stefanirndorfer.popularmovies.R;
+import at.stefanirndorfer.popularmovies.databinding.ActivityDetailBinding;
 import at.stefanirndorfer.popularmovies.model.Movie;
 import at.stefanirndorfer.popularmovies.viewmodel.LiveDataDetailActivityViewModel;
 
@@ -23,43 +23,15 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
     private static final String INTERNET_DIALOG_TAG = "internet_dialog_tag";
 
     private LiveDataDetailActivityViewModel viewModel;
-
-    // image layout refs
-    private ImageView mMoviePoster;
-    private ProgressBar mLoadingProgress;
-    private TextView mErrorTextView;
-
-    // movie data layout refs
-    private TextView mVoteCountTextView;
-    private TextView mAverageVote;
-    private TextView mPopularity;
-    private TextView mOriginalLanguage;
-    private TextView mOriginalTitle;
-    private TextView mGenres;
-    private TextView mOverview;
-    private TextView mReleaseDate;
-
+    private ActivityDetailBinding mBinding;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        // image layout refs
-        mMoviePoster = findViewById(R.id.iv_movie_poster);
-        mLoadingProgress = findViewById(R.id.pb_loading_progress);
-        mErrorTextView = findViewById(R.id.tv_error_message);
 
-        // movie data layout refs
-        mVoteCountTextView = findViewById(R.id.vote_count_tv);
-        mAverageVote = findViewById(R.id.average_vote_tv);
-        mPopularity = findViewById(R.id.popularity_tv);
-        mOriginalLanguage = findViewById(R.id.original_language_tv);
-        mOriginalTitle = findViewById(R.id.original_title_tv);
-        mGenres = findViewById(R.id.genres_tv);
-        mOverview = findViewById(R.id.overview_tv);
-        mReleaseDate = findViewById(R.id.release_date_tv);
-
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
         Movie movie = extractMovieFromIntent();
         if (movie != null && movie.getTitle() != null) {
             setTitle(movie.getTitle());
@@ -76,8 +48,8 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         if (movie != null) {
             viewModel.setMovie(movie);
         } else {
-            mLoadingProgress.setVisibility(View.GONE);
-            mErrorTextView.setVisibility(View.VISIBLE);
+            mBinding.pbLoadingProgress.setVisibility(View.GONE);
+            mBinding.tvErrorMessage.setVisibility(View.VISIBLE);
         }
     }
 
@@ -103,7 +75,7 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
                 showInternetDialogue();
             } else {
                 // we only request remote data if internet connection is given
-                viewModel.fetchMovieImage(mMoviePoster);
+                viewModel.fetchMovieImage(mBinding.ivMoviePoster);
                 populateTextViews();
             }
         };
@@ -112,14 +84,14 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
 
     private void subscribeOnImage() {
         final Observer<Bitmap> movieImageObserver = bitmap -> {
-            mLoadingProgress.setVisibility(View.GONE);
+            mBinding.pbLoadingProgress.setVisibility(View.GONE);
             if (bitmap == null) {
-                mErrorTextView.setVisibility(View.VISIBLE);
+                mBinding.tvErrorMessage.setVisibility(View.VISIBLE);
             } else {
-                mErrorTextView.setVisibility(View.GONE);
-                mMoviePoster.setVisibility(View.VISIBLE);
+                mBinding.tvErrorMessage.setVisibility(View.GONE);
+                mBinding.ivMoviePoster.setVisibility(View.VISIBLE);
             }
-            mMoviePoster.setImageBitmap(bitmap);
+            mBinding.ivMoviePoster.setImageBitmap(bitmap);
         };
         viewModel.getImage().observe(this, movieImageObserver);
     }
@@ -127,22 +99,22 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
     private void populateTextViews() {
         Movie movie = viewModel.getMovie();
         if (movie == null) {
-            Log.e(TAG, "Movie should not be null at this point!");
-            return;
+            throw new IllegalArgumentException("Movie should not be null at this point!");
         }
-        handleStringResult(viewModel.getVoteCountString(), mVoteCountTextView);
-        handleStringResult(viewModel.getVoteAverageString(), mAverageVote);
-        handleStringResult(viewModel.getPopularityString(), mPopularity);
-        handleStringResult(viewModel.getOriginalLanguageString(), mOriginalLanguage);
-        handleStringResult(viewModel.getOriginalTitleString(), mOriginalTitle);
-        handleStringResult(viewModel.getGenresString(), mGenres);
-        handleStringResult(viewModel.getOverviewString(), mOverview);
-        handleStringResult(viewModel.getReleaseDate(), mReleaseDate);
+        handleStringResult(viewModel.getVoteCountString(), mBinding.voteCountTv);
+        handleStringResult(viewModel.getVoteAverageString(), mBinding.averageVoteTv);
+        handleStringResult(viewModel.getPopularityString(), mBinding.popularityTv);
+        handleStringResult(viewModel.getOriginalLanguageString(), mBinding.originalLanguageTv);
+        handleStringResult(viewModel.getOriginalTitleString(), mBinding.originalTitleTv);
+        handleStringResult(viewModel.getGenresString(), mBinding.genresTv);
+        handleStringResult(viewModel.getOverviewString(), mBinding.overviewTv);
+        handleStringResult(viewModel.getReleaseDate(), mBinding.releaseDateTv);
     }
 
     /**
-     *  sets the given string as text into textView
-     *  if string is empty "no data available" is set
+     * sets the given string as text into textView
+     * if string is empty "no data available" is set
+     *
      * @param string
      * @param textView
      */
