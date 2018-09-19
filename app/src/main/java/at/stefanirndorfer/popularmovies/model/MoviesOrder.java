@@ -2,7 +2,8 @@ package at.stefanirndorfer.popularmovies.model;
 
 public enum MoviesOrder {
     POPULAR("popular"),
-    TOP_RATED("top_rated");
+    TOP_RATED("top_rated"),
+    FAVORITES("favorites");
 
     private final String name;
 

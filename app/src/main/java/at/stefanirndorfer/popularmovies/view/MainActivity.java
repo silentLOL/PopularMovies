@@ -17,14 +17,14 @@ import at.stefanirndorfer.popularmovies.R;
 import at.stefanirndorfer.popularmovies.adapter.ThumbnailsAdapter;
 import at.stefanirndorfer.popularmovies.model.Movie;
 import at.stefanirndorfer.popularmovies.model.ThumbnailWrapper;
-import at.stefanirndorfer.popularmovies.viewmodel.LiveDataMainActivityViewModel;
+import at.stefanirndorfer.popularmovies.viewmodel.MainActivityViewModel;
 
 public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter.ThumbnailsAdapterOnClickHandler, InternetDialogListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = MainActivity.class.getName();
     private static final String INTERNET_DIALOG_TAG = "internet_dialog_tag";
 
-    private LiveDataMainActivityViewModel viewModel;
+    private MainActivityViewModel viewModel;
     private RecyclerView mRecyclerViewMovies;
     private GridLayoutManager mGridLayoutManager;
     private ThumbnailsAdapter mThumbnailsAdapter;
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
     }
 
     private void initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(LiveDataMainActivityViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         subscribeOnLiveData();
     }
 

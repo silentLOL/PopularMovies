@@ -4,15 +4,21 @@ import android.arch.lifecycle.MutableLiveData;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import at.stefanirndorfer.popularmovies.database.AppDataBase;
 import at.stefanirndorfer.popularmovies.model.Movie;
 import at.stefanirndorfer.popularmovies.utils.PopularMoviesConstants;
 
-public class LiveDataDetailActivityViewModel extends InternetAwareLiveDataViewModel {
+public class DetailActivityViewModel extends InternetAwareLiveDataViewModel {
+
+    private static final String TAG = DetailActivityViewModel.class.getName();
+    AppDataBase mDataBase;
+
 
     MutableLiveData<Bitmap> image = new MutableLiveData<>();
     private Movie mMovie;
@@ -30,14 +36,10 @@ public class LiveDataDetailActivityViewModel extends InternetAwareLiveDataViewMo
             }
 
             @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-
-            }
+            public void onBitmapFailed(Drawable errorDrawable) {}
 
             @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
+            public void onPrepareLoad(Drawable placeHolderDrawable) {}
         };
 
         if (mMovie != null && !TextUtils.isEmpty(mMovie.getPosterPath())) {
@@ -118,5 +120,23 @@ public class LiveDataDetailActivityViewModel extends InternetAwareLiveDataViewMo
             return mMovie.getReleaseDate();
         }
         return "";
+    }
+
+    /**
+     * this must be called after initialisation
+     * @param mDataBase
+     */
+    public void setDataBase(AppDataBase mDataBase) {
+        this.mDataBase = mDataBase;
+    }
+
+    public void addCurrentMovieToDataBase() {
+        Log.d(TAG, "Adding " + mMovie.getTitle() + " to the database");
+        mDataBase.movieDao().insertFavoriteMovie(mMovie);
+    }
+
+    public void removeCurrentMovieFromDataBase() {
+        Log.d(TAG, "Removing " + mMovie.getTitle() + " from the database");
+        mDataBase.movieDao().deleteFavoriteMovie(mMovie);
     }
 }

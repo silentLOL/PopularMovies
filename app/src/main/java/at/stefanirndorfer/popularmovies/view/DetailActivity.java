@@ -3,9 +3,11 @@ package at.stefanirndorfer.popularmovies.view;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -13,17 +15,20 @@ import android.view.View;
 import android.widget.TextView;
 
 import at.stefanirndorfer.popularmovies.R;
+import at.stefanirndorfer.popularmovies.database.AppDataBase;
 import at.stefanirndorfer.popularmovies.databinding.ActivityDetailBinding;
 import at.stefanirndorfer.popularmovies.model.Movie;
-import at.stefanirndorfer.popularmovies.viewmodel.LiveDataDetailActivityViewModel;
+import at.stefanirndorfer.popularmovies.model.MoviesOrder;
+import at.stefanirndorfer.popularmovies.viewmodel.DetailActivityViewModel;
 
 public class DetailActivity extends AppCompatActivity implements InternetDialogListener {
 
     private static final String TAG = DetailActivity.class.getName();
     private static final String INTERNET_DIALOG_TAG = "internet_dialog_tag";
 
-    private LiveDataDetailActivityViewModel viewModel;
+    private DetailActivityViewModel viewModel;
     private ActivityDetailBinding mBinding;
+    private boolean mIsFavorite;
 
 
     @Override
@@ -38,13 +43,23 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         }
         initViewModel(movie);
         subscribeOnViewModelDataUpdates();
+        // we want to find out if the displayed movie comes from our favorite database by
+        // looking up the shared prefs if the sort-order is favorits
+        mIsFavorite = checkIfSortOrderIsFavorite();
         viewModel.checkInternetConnection();
+    }
+
+    private boolean checkIfSortOrderIsFavorite() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String sortOrder = sharedPreferences.getString(getString(R.string.pref_order_key),
+                getResources().getString(R.string.pref_order_popular_value));
+        return sortOrder.equals(MoviesOrder.FAVORITES.toString());
     }
 
 
     private void initViewModel(Movie movie) {
-        viewModel = ViewModelProviders.of(this).get(LiveDataDetailActivityViewModel.class);
-
+        viewModel = ViewModelProviders.of(this).get(DetailActivityViewModel.class);
+        viewModel.setDataBase(AppDataBase.getInstance(getApplicationContext()));
         if (movie != null) {
             viewModel.setMovie(movie);
         } else {
@@ -76,7 +91,7 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
             } else {
                 // we only request remote data if internet connection is given
                 viewModel.fetchMovieImage(mBinding.ivMoviePoster);
-                populateTextViews();
+                populateUI();
             }
         };
         viewModel.isInternetConnected().observe(this, hasInternetObserver);
@@ -96,11 +111,13 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         viewModel.getImage().observe(this, movieImageObserver);
     }
 
-    private void populateTextViews() {
+    private void populateUI() {
         Movie movie = viewModel.getMovie();
         if (movie == null) {
             throw new IllegalArgumentException("Movie should not be null at this point!");
         }
+
+        updateIsFavoirteMovieIndicator();
         handleStringResult(viewModel.getVoteCountString(), mBinding.voteCountTv);
         handleStringResult(viewModel.getVoteAverageString(), mBinding.averageVoteTv);
         handleStringResult(viewModel.getPopularityString(), mBinding.popularityTv);
@@ -109,6 +126,29 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         handleStringResult(viewModel.getGenresString(), mBinding.genresTv);
         handleStringResult(viewModel.getOverviewString(), mBinding.overviewTv);
         handleStringResult(viewModel.getReleaseDate(), mBinding.releaseDateTv);
+    }
+
+    /**
+     * todo: indicates in the ui weather a movie is a favorite
+     */
+    private void updateIsFavoirteMovieIndicator() {
+
+    }
+
+    /**
+     * updates triggers the respective database query
+     * and updates the ui accordingly
+     */
+    public void onToggleSetFavorite(){
+        mIsFavorite = !mIsFavorite;
+        updateIsFavoirteMovieIndicator();
+        if (mIsFavorite){
+            // add movie to db
+            viewModel.addCurrentMovieToDataBase();
+        } else {
+            // remove movie from db
+            viewModel.removeCurrentMovieFromDataBase();
+        }
     }
 
     /**
@@ -126,14 +166,23 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         }
     }
 
+    /**
+     * brings up a "connect-to-internet" dialog in case there is no internet available
+     */
     private void showInternetDialogue() {
         InternetDialog greetingDialog = InternetDialog.newInstance(this);
         greetingDialog.show(getSupportFragmentManager(), INTERNET_DIALOG_TAG);
     }
 
 
+    /**
+     * No-Internet-Dialog was handled by the user.
+     * if the dialog is done we check again if the internet connection is given now
+     */
     @Override
     public void onDialogDone() {
         viewModel.checkInternetConnection();
     }
+
+
 }

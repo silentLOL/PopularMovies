@@ -17,12 +17,14 @@ public abstract class AppDataBase extends RoomDatabase {
     private static final String DATABASE_NAME = "favorite_movies_list";
     private static AppDataBase sInstance;
 
-    public static AppDataBase getsInstance(Context context) {
+    public static AppDataBase getInstance(Context context) {
         if (sInstance == null) {
             synchronized (LOCK) {
                 Log.d(TAG, "Creating new database instance");
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),
                         AppDataBase.class, AppDataBase.DATABASE_NAME)
+                        //TODO: only for testing purposes allowed on main therad!!
+                        .allowMainThreadQueries()
                         .build();
             }
         }
@@ -30,4 +32,5 @@ public abstract class AppDataBase extends RoomDatabase {
         return sInstance;
     }
 
+    public abstract MovieDao movieDao();
 }

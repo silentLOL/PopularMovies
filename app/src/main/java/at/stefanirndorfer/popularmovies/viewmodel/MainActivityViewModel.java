@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import at.stefanirndorfer.popularmovies.database.AppDataBase;
 import at.stefanirndorfer.popularmovies.model.Movie;
 import at.stefanirndorfer.popularmovies.model.MovieQueryResponse;
 import at.stefanirndorfer.popularmovies.model.MoviesOrder;
@@ -17,17 +18,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LiveDataMainActivityViewModel extends InternetAwareLiveDataViewModel {
+public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
 
-    private static final String TAG = LiveDataMainActivityViewModel.class.getName();
+    private static final String TAG = MainActivityViewModel.class.getName();
     public static final MoviesOrder DEFAULT_ORDER = MoviesOrder.POPULAR;
+
+    private AppDataBase mDataBase;
 
     private MoviesOrder mSortBy;
     private MutableLiveData<ThumbnailWrapper[]> mThumbnailsResults = new MutableLiveData<>();
     private MovieQueryResponse mLatestQueryData;
     private ArrayList<Movie> mGlobalMovieList;
 
-    public LiveDataMainActivityViewModel() {
+    public MainActivityViewModel() {
         this.mSortBy = DEFAULT_ORDER;
     }
 
