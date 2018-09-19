@@ -1,25 +1,31 @@
 package at.stefanirndorfer.popularmovies.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity(tableName = "favorite_movie")
 public class Movie implements Parcelable {
 
+    @ColumnInfo(name = "vote_count")
     @SerializedName("vote_count")
     private Integer voteCount;
 
+    @PrimaryKey
     @SerializedName("id")
     private Integer id;
 
     @SerializedName("video")
     private Boolean video;
 
+    @ColumnInfo(name = "vote_average")
     @SerializedName("vote_average")
     private Double voteAverage;
 
@@ -29,18 +35,23 @@ public class Movie implements Parcelable {
     @SerializedName("popularity")
     private Double popularity;
 
+    @ColumnInfo(name = "poster_path")
     @SerializedName("poster_path")
     private String posterPath;
 
+    @ColumnInfo(name = "original_language")
     @SerializedName("original_language")
     private String originalLanguage;
 
+    @ColumnInfo(name = "original_title")
     @SerializedName("original_title")
     private String originalTitle;
 
+    @ColumnInfo(name = "genre_ids")
     @SerializedName("genre_ids")
     private List<Integer> genreIds;
 
+    @ColumnInfo(name = "backdrop_path")
     @SerializedName("backdrop_path")
     private String backdropPath;
 
@@ -50,6 +61,7 @@ public class Movie implements Parcelable {
     @SerializedName("overview")
     private String overview;
 
+    @ColumnInfo(name = "release_date")
     @SerializedName("release_date")
     private String releaseDate;
 
