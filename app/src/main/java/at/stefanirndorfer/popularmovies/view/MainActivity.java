@@ -15,6 +15,7 @@ import android.view.MenuItem;
 
 import at.stefanirndorfer.popularmovies.R;
 import at.stefanirndorfer.popularmovies.adapter.ThumbnailsAdapter;
+import at.stefanirndorfer.popularmovies.database.AppDataBase;
 import at.stefanirndorfer.popularmovies.model.Movie;
 import at.stefanirndorfer.popularmovies.model.ThumbnailWrapper;
 import at.stefanirndorfer.popularmovies.viewmodel.MainActivityViewModel;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
         setupSharedPreferences();
         viewModel.checkInternetConnection();
     }
+
 
     private void setupSharedPreferences() {
         // Get all of the values from shared preferences to set it up
@@ -102,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
 
     private void initViewModel() {
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+        viewModel.setDataBase(AppDataBase.getInstance(getApplicationContext()));
         subscribeOnLiveData();
     }
 

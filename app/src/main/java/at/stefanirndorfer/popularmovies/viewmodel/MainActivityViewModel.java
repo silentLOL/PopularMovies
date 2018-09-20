@@ -38,7 +38,21 @@ public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
      * triggers a network call or a  to refresh our movie data
      */
     public void requestMovieData() {
-        doNetworkRequest();
+        if (mSortBy == MoviesOrder.FAVORITES) {
+            doDatabaseQuery();
+        } else {
+            doNetworkRequest();
+        }
+    }
+
+    /**
+     * clears all preexisting data and calls the database for
+     * all favorite movies
+     */
+    private void doDatabaseQuery() {
+        resetData();
+        mGlobalMovieList = (ArrayList<Movie>) mDataBase.movieDao().loadAllFavoriteMovies();
+        updateThumbnailWrappers();
     }
 
     private void doNetworkRequest() {
@@ -73,7 +87,7 @@ public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
     }
 
     private void updateGlobalMoviesList() {
-        if (mLatestQueryData.getPage() == 1) {
+        if (mLatestQueryData != null && mLatestQueryData.getPage() == 1) {
             mGlobalMovieList = new ArrayList<>();
         }
         for (Movie currElem :
@@ -155,4 +169,7 @@ public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
         Log.d(TAG, "onCleared");
     }
 
+    public void setDataBase(AppDataBase mDataBase) {
+        this.mDataBase = mDataBase;
+    }
 }
