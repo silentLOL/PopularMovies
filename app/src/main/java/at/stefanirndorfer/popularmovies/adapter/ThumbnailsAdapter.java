@@ -13,17 +13,17 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import at.stefanirndorfer.popularmovies.R;
-import at.stefanirndorfer.popularmovies.model.ThumbnailWrapper;
+import at.stefanirndorfer.popularmovies.model.Movie;
 import at.stefanirndorfer.popularmovies.utils.PopularMoviesConstants;
 
 public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailsAdapter.ThumbnailsAdapterViewHolder> {
 
     private static final String TAG = ThumbnailsAdapter.class.getName();
-    private ThumbnailWrapper[] mThumbnailData;
+    private Movie[] mThumbnailData;
     private final ThumbnailsAdapterOnClickHandler mClickHandler;
 
     public interface ThumbnailsAdapterOnClickHandler {
-        void onClick(int movieId);
+        void onClick(Movie selectedMovie);
     }
 
     public class ThumbnailsAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -38,8 +38,8 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailsAdapter.Th
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            int id = mThumbnailData[adapterPosition].getId();
-            mClickHandler.onClick(id);
+            Movie sleectedMovie = mThumbnailData[adapterPosition];
+            mClickHandler.onClick(sleectedMovie);
         }
     }
 
@@ -47,7 +47,7 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailsAdapter.Th
         this.mClickHandler = mClickHandler;
     }
 
-    public void setThumbnailData(ThumbnailWrapper[] mThumbnailData) {
+    public void setMovieData(Movie[] mThumbnailData) {
         Log.d(TAG, "Setting mThumbnailData. Length: " + mThumbnailData.length);
         this.mThumbnailData = mThumbnailData;
         notifyDataSetChanged();
@@ -64,7 +64,7 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailsAdapter.Th
 
     @Override
     public void onBindViewHolder(ThumbnailsAdapterViewHolder holder, int position) {
-        ThumbnailWrapper currElem = mThumbnailData[position];
+        Movie currElem = mThumbnailData[position];
         String path = PopularMoviesConstants.BASIC_POSTER_PATH + PopularMoviesConstants.DEFAULT_IMAGE_WIDTH + currElem.getPosterPath();
         Log.d(TAG, "Requesting Image: " + path);
         Picasso.with(holder.itemView.getContext())

@@ -4,13 +4,12 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import at.stefanirndorfer.popularmovies.database.AppDataBase;
 import at.stefanirndorfer.popularmovies.model.Movie;
 import at.stefanirndorfer.popularmovies.model.MovieQueryResponse;
 import at.stefanirndorfer.popularmovies.model.MoviesOrder;
-import at.stefanirndorfer.popularmovies.model.ThumbnailWrapper;
 import at.stefanirndorfer.popularmovies.network.RequestMoviesService;
 import at.stefanirndorfer.popularmovies.network.RetrofitClientInstance;
 import at.stefanirndorfer.popularmovies.utils.ApiConstants;
@@ -26,22 +25,22 @@ public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
     private AppDataBase mDataBase;
 
     private MoviesOrder mSortBy;
-    private MutableLiveData<ThumbnailWrapper[]> mThumbnailsResults = new MutableLiveData<>();
     private MovieQueryResponse mLatestQueryData;
-    private ArrayList<Movie> mGlobalMovieList;
+    private LiveData<List<Movie>> mFavoriteMovieList;
+    private MutableLiveData<List<Movie>> mNetworkMovieList;
 
     public MainActivityViewModel() {
         this.mSortBy = DEFAULT_ORDER;
     }
 
     /**
-     * triggers a network call or a  to refresh our movie data
+     * triggers a network call or a db-query to refresh our movie data
      */
     public void requestMovieData() {
-        if (mSortBy == MoviesOrder.FAVORITES) {
-            doDatabaseQuery();
-        } else {
+        if (mSortBy != MoviesOrder.FAVORITES) {
             doNetworkRequest();
+        } else {
+            doFavoriteMovieDatabaseQuery();
         }
     }
 
@@ -49,17 +48,15 @@ public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
      * clears all preexisting data and calls the database for
      * all favorite movies
      */
-    private void doDatabaseQuery() {
-        resetData();
-        mGlobalMovieList = (ArrayList<Movie>) mDataBase.movieDao().loadAllFavoriteMovies();
-        updateThumbnailWrappers();
+    public void doFavoriteMovieDatabaseQuery() {
+        mFavoriteMovieList = mDataBase.movieDao().loadAllFavoriteMovies();
     }
 
     private void doNetworkRequest() {
         int page = 1;
         if (mLatestQueryData != null) {
             // if movies are null the viewModel was just created or the sorting criteria wa changed
-            // and the data were thwrowen away
+            // and the data were thrown away
             page = mLatestQueryData.getPage() + 1;
         }
         RequestMoviesService service = RetrofitClientInstance.getRetrofitInstance().create(RequestMoviesService.class);
@@ -73,8 +70,7 @@ public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
                     MovieQueryResponse result = response.body();
                     if (result != null && !result.getMovies().isEmpty()) {
                         mLatestQueryData = result;
-                        updateGlobalMoviesList();
-                        updateThumbnailWrappers();
+                        updateNetworkMovieList();
                     }
                 }
             }
@@ -86,50 +82,35 @@ public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
         });
     }
 
-    private void updateGlobalMoviesList() {
-        if (mLatestQueryData != null && mLatestQueryData.getPage() == 1) {
-            mGlobalMovieList = new ArrayList<>();
+    private void updateNetworkMovieList() {
+        if (mLatestQueryData != null && mLatestQueryData.getPage() == 1 && null != mNetworkMovieList.getValue()) {
+            //this means we did a first fetch of data and given old data may be from an obsolete sort-order
+            mNetworkMovieList.getValue().clear();
         }
         for (Movie currElem :
                 mLatestQueryData.getMovies()) {
-            mGlobalMovieList.add(currElem);
+            mNetworkMovieList.getValue().add(currElem);
+        }
+        mNetworkMovieList.postValue(mNetworkMovieList.getValue());
+    }
+
+    private void resetNetworkMovieData() {
+        mLatestQueryData = null;
+        if (mNetworkMovieList != null && !mNetworkMovieList.getValue().isEmpty()) {
+            mNetworkMovieList.getValue().clear();
         }
     }
 
-    /**
-     * extracts the ThumbnailWrappers from the global Movies list
-     * and posts the newly generated array to the view
-     */
-    private void updateThumbnailWrappers() {
-        ThumbnailWrapper[] newThumbnails = new ThumbnailWrapper[mGlobalMovieList.size()];
-        for (int i = 0; i < mGlobalMovieList.size(); i++) {
-            newThumbnails[i] = new ThumbnailWrapper(mGlobalMovieList.get(i).getId(), (mGlobalMovieList.get(i).getPosterPath()));
-        }
-        mThumbnailsResults.postValue(newThumbnails);
-    }
-
-
-    /**
-     * @param movieId
-     * @return the full Movie object of the given movieId
-     * null in case the id does not match any of our cached movie data
-     */
-    public Movie getMovieById(int movieId) {
-        for (Movie currElement : mGlobalMovieList) {
-            if (currElement.getId() == movieId) {
-                return currElement;
-            }
-        }
-        //this should never be the case
-        Log.e(TAG, "Selected Movie data not available!");
-        return null;
-    }
 
     //
     // LiveData Getters
     //
-    public LiveData<ThumbnailWrapper[]> getMovieResults() {
-        return mThumbnailsResults;
+    public MutableLiveData<List<Movie>> getNetworkMovieList() {
+        return mNetworkMovieList;
+    }
+
+    public LiveData<List<Movie>> getFavoritesMovieList() {
+        return mFavoriteMovieList;
     }
 
     //
@@ -140,22 +121,17 @@ public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
     }
 
     public void setSortMoviesBy(String sortMoviesBy) {
-        //TODO: override equals method in MovieOrder
         Log.d(TAG, "SortMoviesBy is set to: " + sortMoviesBy);
         if (!sortMoviesBy.equals(this.mSortBy.toString())) {
             this.mSortBy = MoviesOrder.getMovieOrderByString(sortMoviesBy);
             Log.d(TAG, "Sort criteria has changed to: " + sortMoviesBy);
             // this will cause the next request to query for page 1
-            resetData();
+            resetNetworkMovieData();
         }
     }
 
-    private void resetData() {
-        mLatestQueryData = null;
-        if (mGlobalMovieList != null && !mGlobalMovieList.isEmpty()) {
-            mGlobalMovieList.clear();
-            mGlobalMovieList = null;
-        }
+    public void setDataBase(AppDataBase mDataBase) {
+        this.mDataBase = mDataBase;
     }
 
 
@@ -167,9 +143,5 @@ public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
     protected void onCleared() {
         super.onCleared();
         Log.d(TAG, "onCleared");
-    }
-
-    public void setDataBase(AppDataBase mDataBase) {
-        this.mDataBase = mDataBase;
     }
 }

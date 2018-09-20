@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,11 +14,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.List;
+
 import at.stefanirndorfer.popularmovies.R;
 import at.stefanirndorfer.popularmovies.adapter.ThumbnailsAdapter;
 import at.stefanirndorfer.popularmovies.database.AppDataBase;
 import at.stefanirndorfer.popularmovies.model.Movie;
-import at.stefanirndorfer.popularmovies.model.ThumbnailWrapper;
 import at.stefanirndorfer.popularmovies.viewmodel.MainActivityViewModel;
 
 public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter.ThumbnailsAdapterOnClickHandler, InternetDialogListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -109,14 +111,12 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
     }
 
     private void subscribeOnLiveData() {
-        Log.d(TAG, "Subcribeing to observable values");
-        final Observer<ThumbnailWrapper[]> movieThumbnailsOutputObserver = thumbnailWrappers -> {
-            Log.d(TAG, "Movie data (re)loaded");
-            mThumbnailsAdapter.setThumbnailData(thumbnailWrappers);
-            mCurrentlyLoading = false;
-        };
-        viewModel.getMovieResults().observe(this, movieThumbnailsOutputObserver);
+        subscribeOnNetworkMovieList();
+        subscribeOnFavoriteMovieList();
+        subscribeOnInternetObserver();
+    }
 
+    private void subscribeOnInternetObserver() {
         final Observer<Boolean> hasInternetObserver = (Boolean hasInternetConnection) -> {
             if (hasInternetConnection != null && !hasInternetConnection) {
                 Log.d(TAG, "Internet connection: " + hasInternetConnection);
@@ -128,6 +128,27 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
             }
         };
         viewModel.isInternetConnected().observe(this, hasInternetObserver);
+    }
+
+    private void subscribeOnFavoriteMovieList() {
+        final Observer<List<Movie>> favoriteMovieDataObserver = movies -> updateAdapterData(movies);
+        viewModel.getFavoritesMovieList().observe(this, favoriteMovieDataObserver);
+    }
+
+    private void subscribeOnNetworkMovieList() {
+        Log.d(TAG, "Subscribing to observable values");
+        final Observer<List<Movie>> networkMovieDataObserver = movieData -> {
+            updateAdapterData(movieData);
+        };
+        viewModel.getNetworkMovieList().observe(this, networkMovieDataObserver);
+    }
+
+    private void updateAdapterData(List<Movie> movieData) {
+        if (null != movieData && !movieData.isEmpty()) {
+            Log.d(TAG, "Movie data (re)loaded");
+            mThumbnailsAdapter.setMovieData(movieData.toArray(new Movie[0]));
+            mCurrentlyLoading = false;
+        }
     }
 
     private void showInternetDialogue() {
@@ -146,9 +167,8 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
     }
 
     @Override
-    public void onClick(int movieId) {
-        Log.d(TAG, "movie with id " + movieId + " clicked!");
-        Movie selectedMovie = viewModel.getMovieById(movieId);
+    public void onClick(Movie selectedMovie) {
+        Log.d(TAG, "movie with id " + selectedMovie.getId() + " clicked!");
         Class destinationClass = DetailActivity.class;
         Intent intentToStartDetailActivity = new Intent(this, destinationClass);
         intentToStartDetailActivity.putExtra("MOVIE", selectedMovie);
@@ -181,7 +201,10 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-
+        // in case we come back from details view and favorites have changed
+        if (viewModel.getSortMoviesBy().toString().equals(R.string.pref_order_my_favorites_value)){
+            requestMovieData();
+        }
     }
 
     @Override
