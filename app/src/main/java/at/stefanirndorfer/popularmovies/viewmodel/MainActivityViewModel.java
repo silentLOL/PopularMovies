@@ -35,9 +35,13 @@ public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
     }
 
     /**
-     * triggers a network call to refresh our movie data
+     * triggers a network call or a  to refresh our movie data
      */
     public void requestMovieData() {
+        doNetworkRequest();
+    }
+
+    private void doNetworkRequest() {
         int page = 1;
         if (mLatestQueryData != null) {
             // if movies are null the viewModel was just created or the sorting criteria wa changed
