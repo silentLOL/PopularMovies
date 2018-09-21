@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -12,9 +12,9 @@
             android:id="@+id/tv_error_message"
             android:layout_width="90dp"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="@string/error_message"
             android:textAlignment="center"
-            android:gravity="center"
             android:textColor="@android:color/holo_red_light"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/iv_movie_poster"
@@ -50,76 +50,106 @@
 
 
         <TextView
+            android:id="@+id/average_vote_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:style="@style/TextAppearance.AppCompat.Display3"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/vote_value_size"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/release_date_tv"
+            app:layout_constraintTop_toBottomOf="@+id/release_date_tv"
+            tools:text="7.5" />
+
+        <TextView
+            android:id="@+id/release_date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="49dp"
+            android:style="@style/TextAppearance.AppCompat.Display1"
+            android:textStyle="italic"
+            tools:layout_editor_absoluteX="157dp"
+            tools:layout_editor_absoluteY="16dp"
+            tools:text="2017" />
+
+        <View
+            android:id="@+id/vote_count_view"
+            android:layout_width="118dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorAccent"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="@+id/average_vote_tv"
+            app:layout_constraintTop_toBottomOf="@+id/average_vote_tv" />
+
+        <TextView
             android:id="@+id/label_vote_count_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="8dp"
             android:text="@string/detail_vote_count_label"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/label_text_size"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="161dp"
-            tools:layout_editor_absoluteY="92dp" />
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@+id/vote_count_view"
+            app:layout_constraintStart_toStartOf="@+id/label_popularity_tv"
+            app:layout_constraintTop_toBottomOf="@+id/label_popularity_tv" />
 
         <TextView
             android:id="@+id/vote_count_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/vote_value_size"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/label_vote_count_tv"
-            app:layout_constraintTop_toBottomOf="@+id/label_vote_count_tv"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:style="@style/VoteCountStyle"
+            app:layout_constraintBottom_toBottomOf="@+id/label_vote_count_tv"
+            app:layout_constraintEnd_toEndOf="@+id/vote_count_view"
+            app:layout_constraintStart_toEndOf="@+id/label_vote_count_tv"
             tools:text="3000" />
 
-        <TextView
-            android:id="@+id/average_vote_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/vote_value_size"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="157dp"
-            tools:layout_editor_absoluteY="40dp"
-            tools:text="7.5" />
-
-        <TextView
-            android:id="@+id/release_date_tv"
-            style="@style/TextAppearance.Compat.Notification"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/detail_tv_padding"
-            tools:layout_editor_absoluteX="157dp"
-            tools:layout_editor_absoluteY="16dp"
-            tools:text="2017" />
 
         <TextView
             android:id="@+id/label_popularity_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:text="@string/detail_popularity_label"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/label_text_size"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="164dp"
-            tools:layout_editor_absoluteY="148dp" />
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@+id/vote_count_view"
+            app:layout_constraintTop_toTopOf="@+id/vote_count_view" />
+
 
         <TextView
             android:id="@+id/popularity_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/vote_value_size"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/label_popularity_tv"
-            app:layout_constraintTop_toBottomOf="@+id/label_popularity_tv"
+            android:style="@style/VoteCountStyle"
+            app:layout_constraintBottom_toBottomOf="@+id/label_popularity_tv"
+            app:layout_constraintStart_toStartOf="@+id/vote_count_tv"
             tools:text="40" />
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/overview_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="@string/lorem_ipsum"
+                android:paddingStart="@dimen/detail_tv_padding" />
+
+        </ScrollView>
+
+
 
     </android.support.constraint.ConstraintLayout>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
 
         <ScrollView
@@ -151,11 +181,7 @@
                         android:textSize="@dimen/label_text_size"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/overview_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/detail_tv_padding" />
+
                 </LinearLayout>
 
 
@@ -224,8 +250,6 @@
                         android:layout_height="wrap_content"
                         android:paddingStart="@dimen/detail_tv_padding" />
                 </LinearLayout>
-
-
 
 
             </LinearLayout>
