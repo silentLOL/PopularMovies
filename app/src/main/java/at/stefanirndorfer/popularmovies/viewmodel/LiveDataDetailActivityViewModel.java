@@ -113,9 +113,15 @@ public class LiveDataDetailActivityViewModel extends InternetAwareLiveDataViewMo
         return "";
     }
 
-    public String getReleaseDate() {
+    /**
+     * we only want to thow the year and assume it is consistently the first 4 characters
+     *
+     * @return
+     */
+    public String getReleaseYear() {
         if (!TextUtils.isEmpty(mMovie.getReleaseDate())) {
-            return mMovie.getReleaseDate();
+            String fullDate = mMovie.getReleaseDate();
+            return fullDate.substring(0, 4);
         }
         return "";
     }

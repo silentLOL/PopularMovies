@@ -11,6 +11,8 @@
 
 
     <string name="image_thumbnail_content_description">image thumbnail</string>
+    <string name="add_to_fav_bt_content_description">button to add this movie to my favorites</string>
+    <string name="remove_from_fav_bt_content_description">button to remove this movie from my favorites</string>
     <string name="error_message">Image could not be loaded</string>
     <string name="internet_dialog_title">No Internet Connection!</string>
     <string name="got_it">Done</string>

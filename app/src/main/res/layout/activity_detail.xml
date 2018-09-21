@@ -38,7 +38,7 @@
         <ImageView
             android:id="@+id/iv_movie_poster"
             android:layout_width="90dp"
-            android:layout_height="120dp"
+            android:layout_height="130dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:adjustViewBounds="true"
@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:style="@style/TextAppearance.AppCompat.Display3"
+            style="@style/TextAppearance.AppCompat.Display3"
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/vote_value_size"
             android:textStyle="bold"
@@ -64,11 +64,11 @@
 
         <TextView
             android:id="@+id/release_date_tv"
+            style="@style/ReleaseDateStyle"
             android:layout_width="wrap_content"
-            android:layout_height="49dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
-            android:style="@style/TextAppearance.AppCompat.Display1"
             android:textStyle="italic"
             app:layout_constraintStart_toEndOf="@+id/iv_movie_poster"
             app:layout_constraintTop_toTopOf="parent"
@@ -76,13 +76,12 @@
 
         <View
             android:id="@+id/vote_count_view"
-            android:layout_width="118dp"
-            android:layout_height="52dp"
-            android:layout_marginTop="6dp"
+            android:layout_width="216dp"
+            android:layout_height="55dp"
             android:background="@color/colorAccent"
             android:visibility="visible"
-            app:layout_constraintStart_toStartOf="@+id/average_vote_tv"
-            app:layout_constraintTop_toBottomOf="@+id/average_vote_tv" />
+            app:layout_constraintBottom_toBottomOf="@+id/iv_movie_poster"
+            app:layout_constraintStart_toStartOf="@+id/average_vote_tv" />
 
         <TextView
             android:id="@+id/label_vote_count_tv"
@@ -90,21 +89,19 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="8dp"
+            style="@style/DetailLabelSmall"
             android:text="@string/detail_vote_count_label"
-            android:style="@style/DetailLabelSmall"
             app:layout_constraintBottom_toBottomOf="@+id/vote_count_view"
             app:layout_constraintStart_toStartOf="@+id/label_popularity_tv"
             app:layout_constraintTop_toBottomOf="@+id/label_popularity_tv" />
 
         <TextView
             android:id="@+id/vote_count_tv"
+            style="@style/VoteCountStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:style="@style/VoteCountStyle"
+            android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/label_vote_count_tv"
-            app:layout_constraintEnd_toEndOf="@+id/vote_count_view"
             app:layout_constraintStart_toEndOf="@+id/label_vote_count_tv"
             tools:text="3000" />
 
@@ -115,8 +112,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
+            style="@style/DetailLabelSmall"
             android:text="@string/detail_popularity_label"
-            android:style="@style/DetailLabelSmall"
             app:layout_constraintStart_toStartOf="@+id/vote_count_view"
             app:layout_constraintTop_toTopOf="@+id/vote_count_view" />
 
@@ -125,7 +122,7 @@
             android:id="@+id/popularity_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:style="@style/VoteCountStyle"
+            style="@style/VoteCountStyle"
             app:layout_constraintBottom_toBottomOf="@+id/label_popularity_tv"
             app:layout_constraintStart_toStartOf="@+id/vote_count_tv"
             tools:text="40" />
@@ -144,7 +141,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:style="@style/DetailLabelSmall"
+            style="@style/DetailLabelSmall"
             android:text="@string/detail_original_language_label"
             app:layout_constraintStart_toStartOf="@+id/iv_movie_poster"
             app:layout_constraintTop_toBottomOf="@+id/view" />
@@ -155,7 +152,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:style="@style/VoteCountStyle"
+            style="@style/VoteCountStyle"
             app:layout_constraintBottom_toBottomOf="@+id/label_original_language_tv"
             app:layout_constraintStart_toEndOf="@+id/label_original_language_tv"
             tools:text="en" />
@@ -165,7 +162,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:style="@style/DetailLabelSmall"
+            style="@style/DetailLabelSmall"
             android:text="@string/detail_original_title_label"
             app:layout_constraintStart_toStartOf="@+id/label_original_language_tv"
             app:layout_constraintTop_toBottomOf="@+id/label_original_language_tv" />
@@ -175,7 +172,7 @@
             android:id="@+id/original_title_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:style="@style/VoteCountStyle"
+            style="@style/VoteCountStyle"
             app:layout_constraintBottom_toBottomOf="@+id/label_original_title_tv"
             app:layout_constraintStart_toStartOf="@+id/original_language_tv"
             tools:text="Hallo zusammen" />
@@ -183,7 +180,7 @@
         <TextView
             android:id="@+id/overview_tv"
             android:layout_width="0dp"
-            android:layout_height="143dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -193,82 +190,50 @@
             tools:text="@string/lorem_ipsum" />
 
 
-    </android.support.constraint.ConstraintLayout>
-
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-        <ScrollView
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/label_genres_tv"
+            android:layout_width="@dimen/label_width"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:layout_marginTop="150dp">
+            android:layout_marginTop="16dp"
+            style="@style/DetailLabelSmall"
+            android:text="@string/detail_genres_label"
+            app:layout_constraintStart_toStartOf="@+id/overview_tv"
+            app:layout_constraintTop_toBottomOf="@+id/overview_tv" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:orientation="vertical"
-                android:paddingEnd="45dp"
-                android:paddingStart="23dp">
+        <TextView
+            android:id="@+id/genres_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            style="@style/VoteCountStyle"
+            app:layout_constraintStart_toStartOf="@+id/label_genres_tv"
+            app:layout_constraintTop_toBottomOf="@+id/label_genres_tv"
+            tools:text="Drama, Thriller, Comedy" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/row_margin_top"
-                    android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/bt_star_off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/add_to_fav_bt_content_description"
+            android:onClick="addToFavouritesButtonClicked"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/btn_star_big_off" />
 
-
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/row_margin_top"
-                    android:orientation="horizontal">
-
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/row_margin_top"
-                    android:orientation="horizontal">
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/row_margin_top"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/label_genres_tv"
-                        android:layout_width="@dimen/label_width"
-                        android:layout_height="wrap_content"
-                        android:text="@string/detail_genres_label"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/label_text_size"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/genres_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/detail_tv_padding" />
-                </LinearLayout>
+        <ImageView
+            android:id="@+id/bt_star_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/remove_from_fav_bt_content_description"
+            android:onClick="removeFromFavouritesButtonClicked"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/btn_star_big_on" />
 
 
-            </LinearLayout>
-
-        </ScrollView>
-
-    </FrameLayout>
+    </android.support.constraint.ConstraintLayout>
 </layout>

@@ -10,6 +10,12 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
+    <style name="ReleaseDateStyle" parent="TextAppearance.AppCompat.Display2">
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/bright_grey</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
     <style name="VoteCountStyle">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">12sp</item>
