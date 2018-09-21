@@ -125,7 +125,7 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         handleStringResult(viewModel.getOriginalTitleString(), mBinding.originalTitleTv);
         handleStringResult(viewModel.getGenresString(), mBinding.genresTv);
         handleStringResult(viewModel.getOverviewString(), mBinding.overviewTv);
-        handleStringResult(viewModel.getReleaseDate(), mBinding.releaseDateTv);
+        handleStringResult(viewModel.getReleaseYear(), mBinding.releaseDateTv);
     }
 
     /**
@@ -184,5 +184,10 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         viewModel.checkInternetConnection();
     }
 
+    //TODO
+    public void addToFavouritesButtonClicked(View view) {
+    }
 
+    public void removeFromFavouritesButtonClicked(View view) {
+    }
 }
