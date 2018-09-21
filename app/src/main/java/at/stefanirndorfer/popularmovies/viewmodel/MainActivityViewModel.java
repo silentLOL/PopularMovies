@@ -27,7 +27,7 @@ public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
     private MoviesOrder mSortBy;
     private MovieQueryResponse mLatestQueryData;
     private LiveData<List<Movie>> mFavoriteMovieList;
-    private MutableLiveData<List<Movie>> mNetworkMovieList;
+    private MutableLiveData<List<Movie>> mNetworkMovieList = new MutableLiveData<>();
 
     public MainActivityViewModel() {
         this.mSortBy = DEFAULT_ORDER;
@@ -83,13 +83,15 @@ public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
     }
 
     private void updateNetworkMovieList() {
-        if (mLatestQueryData != null && mLatestQueryData.getPage() == 1 && null != mNetworkMovieList.getValue()) {
+        if (mLatestQueryData != null && mLatestQueryData.getPage() == 1) {
             //this means we did a first fetch of data and given old data may be from an obsolete sort-order
-            mNetworkMovieList.getValue().clear();
-        }
-        for (Movie currElem :
-                mLatestQueryData.getMovies()) {
-            mNetworkMovieList.getValue().add(currElem);
+            mNetworkMovieList.setValue(mLatestQueryData.getMovies());
+        } else {
+            // else we append the result of the latest request
+            for (Movie currElem :
+                    mLatestQueryData.getMovies()) {
+                mNetworkMovieList.getValue().add(currElem);
+            }
         }
         mNetworkMovieList.postValue(mNetworkMovieList.getValue());
     }

@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
     private void initViewModel() {
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         viewModel.setDataBase(AppDataBase.getInstance(getApplicationContext()));
+        viewModel.doFavoriteMovieDatabaseQuery();
         subscribeOnLiveData();
     }
 
