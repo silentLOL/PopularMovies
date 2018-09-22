@@ -28,13 +28,13 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
 
     private DetailActivityViewModel viewModel;
     private ActivityDetailBinding mBinding;
-    private boolean mIsFavorite;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        Log.d(TAG, "onCreate");
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
         Movie movie = extractMovieFromIntent();
@@ -44,8 +44,8 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         initViewModel(movie);
         subscribeOnViewModelDataUpdates();
         // we want to find out if the displayed movie comes from our favorite database by
-        // looking up the shared prefs if the sort-order is favorits
-        mIsFavorite = checkIfSortOrderIsFavorite();
+        //checkIfSortOrderIsFavorite();
+        viewModel.checkIfMovieIsFavorite();
         viewModel.checkInternetConnection();
     }
 
@@ -81,6 +81,12 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
     private void subscribeOnViewModelDataUpdates() {
         subscribeOnImage();
         subscribeOnHasInternetConnection();
+        subscribeOnIsFavoriteMovie();
+    }
+
+    private void subscribeOnIsFavoriteMovie() {
+        final Observer<Boolean> isFavoriteMovieObserver = this::updateIsFavoirteMovieIndicator;
+        viewModel.isFavorite().observe(this, isFavoriteMovieObserver);
     }
 
     private void subscribeOnHasInternetConnection() {
@@ -116,8 +122,6 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         if (movie == null) {
             throw new IllegalArgumentException("Movie should not be null at this point!");
         }
-
-        updateIsFavoirteMovieIndicator();
         handleStringResult(viewModel.getVoteCountString(), mBinding.voteCountTv);
         handleStringResult(viewModel.getVoteAverageString(), mBinding.averageVoteTv);
         handleStringResult(viewModel.getPopularityString(), mBinding.popularityTv);
@@ -128,26 +132,15 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         handleStringResult(viewModel.getReleaseYear(), mBinding.releaseDateTv);
     }
 
-    /**
-     * todo: indicates in the ui weather a movie is a favorite
-     */
-    private void updateIsFavoirteMovieIndicator() {
 
-    }
-
-    /**
-     * updates triggers the respective database query
-     * and updates the ui accordingly
-     */
-    public void onToggleSetFavorite(){
-        mIsFavorite = !mIsFavorite;
-        updateIsFavoirteMovieIndicator();
-        if (mIsFavorite){
-            // add movie to db
-            viewModel.addCurrentMovieToDataBase();
+    private void updateIsFavoirteMovieIndicator(boolean isFavorite) {
+        if (isFavorite){
+            mBinding.btFavoritesOn.setVisibility(View.VISIBLE);
+            mBinding.btFavoritesOff.setVisibility(View.GONE);
         } else {
-            // remove movie from db
-            viewModel.removeCurrentMovieFromDataBase();
+            mBinding.btFavoritesOn.setVisibility(View.GONE);
+            mBinding.btFavoritesOff.setVisibility(View.VISIBLE);
+
         }
     }
 
@@ -184,10 +177,18 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         viewModel.checkInternetConnection();
     }
 
-    //TODO
     public void addToFavouritesButtonClicked(View view) {
+        viewModel.addCurrentMovieToDataBase();
     }
 
     public void removeFromFavouritesButtonClicked(View view) {
+        viewModel.removeCurrentMovieFromDataBase();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+    }
+
 }

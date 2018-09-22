@@ -12,6 +12,7 @@ import com.squareup.picasso.Target;
 
 import at.stefanirndorfer.popularmovies.database.AppDataBase;
 import at.stefanirndorfer.popularmovies.model.Movie;
+import at.stefanirndorfer.popularmovies.utils.AppExecutors;
 import at.stefanirndorfer.popularmovies.utils.PopularMoviesConstants;
 
 public class DetailActivityViewModel extends InternetAwareLiveDataViewModel {
@@ -20,7 +21,8 @@ public class DetailActivityViewModel extends InternetAwareLiveDataViewModel {
     AppDataBase mDataBase;
 
 
-    MutableLiveData<Bitmap> image = new MutableLiveData<>();
+    MutableLiveData<Bitmap> mImage = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mIsFavorite = new MutableLiveData<>();
     private Movie mMovie;
 
     public void setMovie(Movie movie) {
@@ -32,14 +34,16 @@ public class DetailActivityViewModel extends InternetAwareLiveDataViewModel {
         Target target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                image.postValue(bitmap);
+                mImage.postValue(bitmap);
             }
 
             @Override
-            public void onBitmapFailed(Drawable errorDrawable) {}
+            public void onBitmapFailed(Drawable errorDrawable) {
+            }
 
             @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {}
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+            }
         };
 
         if (mMovie != null && !TextUtils.isEmpty(mMovie.getPosterPath())) {
@@ -48,8 +52,39 @@ public class DetailActivityViewModel extends InternetAwareLiveDataViewModel {
                     .into(target);
         } else {
             //this will be handled by the view
-            image.postValue(null);
+            mImage.postValue(null);
         }
+    }
+
+    /**
+     * this must be called after initialisation
+     *
+     * @param mDataBase
+     */
+    public void setDataBase(AppDataBase mDataBase) {
+        this.mDataBase = mDataBase;
+    }
+
+    public void addCurrentMovieToDataBase() {
+        Log.d(TAG, "Adding " + mMovie.getTitle() + " to the database");
+        AppExecutors.getInstance().diskIO().execute(() -> mDataBase.movieDao().insertFavoriteMovie(mMovie));
+        mIsFavorite.postValue(true);
+    }
+
+    public void removeCurrentMovieFromDataBase() {
+        Log.d(TAG, "Removing " + mMovie.getTitle() + " from the database");
+        AppExecutors.getInstance().diskIO().execute(() -> mDataBase.movieDao().deleteFavoriteMovie(mMovie));
+        mIsFavorite.postValue(false);
+    }
+
+    /**
+     * queries the favorite movies database to check if movie is stored
+     */
+    public void checkIfMovieIsFavorite(){
+        AppExecutors.getInstance().diskIO().execute(() -> {
+           Movie m =  mDataBase.movieDao().loadMovieById(mMovie.getId());
+           mIsFavorite.postValue(m != null);
+        });
     }
 
     //
@@ -57,9 +92,12 @@ public class DetailActivityViewModel extends InternetAwareLiveDataViewModel {
     //
 
     public MutableLiveData<Bitmap> getImage() {
-        return image;
+        return mImage;
     }
 
+    public MutableLiveData<Boolean> isFavorite() {
+        return mIsFavorite;
+    }
 
     //
     // movie data getters
@@ -128,21 +166,5 @@ public class DetailActivityViewModel extends InternetAwareLiveDataViewModel {
         return "";
     }
 
-    /**
-     * this must be called after initialisation
-     * @param mDataBase
-     */
-    public void setDataBase(AppDataBase mDataBase) {
-        this.mDataBase = mDataBase;
-    }
 
-    public void addCurrentMovieToDataBase() {
-        Log.d(TAG, "Adding " + mMovie.getTitle() + " to the database");
-        mDataBase.movieDao().insertFavoriteMovie(mMovie);
-    }
-
-    public void removeCurrentMovieFromDataBase() {
-        Log.d(TAG, "Removing " + mMovie.getTitle() + " from the database");
-        mDataBase.movieDao().deleteFavoriteMovie(mMovie);
-    }
 }

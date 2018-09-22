@@ -132,12 +132,13 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
     }
 
     private void subscribeOnFavoriteMovieList() {
+        Log.d(TAG, "Subscribing to favorite movie list");
         final Observer<List<Movie>> favoriteMovieDataObserver = movies -> updateAdapterData(movies);
         viewModel.getFavoritesMovieList().observe(this, favoriteMovieDataObserver);
     }
 
     private void subscribeOnNetworkMovieList() {
-        Log.d(TAG, "Subscribing to observable values");
+        Log.d(TAG, "Subscribing to network movie list");
         final Observer<List<Movie>> networkMovieDataObserver = movieData -> {
             updateAdapterData(movieData);
         };
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
 
     private void updateAdapterData(List<Movie> movieData) {
         if (null != movieData && !movieData.isEmpty()) {
-            Log.d(TAG, "Movie data (re)loaded");
+            Log.d(TAG, "Updating the adapter with a list of " + movieData.size() + " items.");
             mThumbnailsAdapter.setMovieData(movieData.toArray(new Movie[0]));
             mCurrentlyLoading = false;
         }

@@ -211,7 +211,7 @@
             tools:text="Drama, Thriller, Comedy" />
 
         <ImageView
-            android:id="@+id/bt_star_off"
+            android:id="@+id/bt_favorites_off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
@@ -223,7 +223,7 @@
             app:srcCompat="@android:drawable/btn_star_big_off" />
 
         <ImageView
-            android:id="@+id/bt_star_on"
+            android:id="@+id/bt_favorites_on"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"

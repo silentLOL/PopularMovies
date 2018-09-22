@@ -49,6 +49,7 @@ public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
      * all favorite movies
      */
     public void doFavoriteMovieDatabaseQuery() {
+        Log.d(TAG, "Reqeuesting Favorite movies from database");
         mFavoriteMovieList = mDataBase.movieDao().loadAllFavoriteMovies();
     }
 
@@ -85,24 +86,22 @@ public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
     private void updateNetworkMovieList() {
         if (mLatestQueryData != null && mLatestQueryData.getPage() == 1) {
             //this means we did a first fetch of data and given old data may be from an obsolete sort-order
+            Log.d(TAG, "Populating new movie list with " + mLatestQueryData.getMovies().size() + " movie items");
             mNetworkMovieList.setValue(mLatestQueryData.getMovies());
         } else {
-            // else we append the result of the latest request
+            Log.d(TAG, "Appending " + mLatestQueryData.getMovies().size() + " movies to existing movie list");
             for (Movie currElem :
                     mLatestQueryData.getMovies()) {
                 mNetworkMovieList.getValue().add(currElem);
             }
+            mNetworkMovieList.setValue(mNetworkMovieList.getValue());
         }
-        mNetworkMovieList.postValue(mNetworkMovieList.getValue());
     }
 
     private void resetNetworkMovieData() {
         mLatestQueryData = null;
-        if (mNetworkMovieList != null && !mNetworkMovieList.getValue().isEmpty()) {
-            mNetworkMovieList.getValue().clear();
-        }
+        mNetworkMovieList = new MutableLiveData<>();
     }
-
 
     //
     // LiveData Getters
