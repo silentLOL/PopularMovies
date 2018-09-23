@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import at.stefanirndorfer.popularmovies.database.AppDataBase;
@@ -83,6 +84,7 @@ public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
         });
     }
 
+
     private void updateNetworkMovieList() {
         if (mLatestQueryData != null && mLatestQueryData.getPage() == 1) {
             //this means we did a first fetch of data and given old data may be from an obsolete sort-order
@@ -90,17 +92,21 @@ public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
             mNetworkMovieList.setValue(mLatestQueryData.getMovies());
         } else {
             Log.d(TAG, "Appending " + mLatestQueryData.getMovies().size() + " movies to existing movie list");
+            // else we append the result of the latest request
             for (Movie currElem :
                     mLatestQueryData.getMovies()) {
                 mNetworkMovieList.getValue().add(currElem);
             }
-            mNetworkMovieList.setValue(mNetworkMovieList.getValue());
         }
+        mNetworkMovieList.postValue(mNetworkMovieList.getValue());
     }
 
     private void resetNetworkMovieData() {
+        Log.d(TAG, "Resetting Network Movie list");
         mLatestQueryData = null;
-        mNetworkMovieList = new MutableLiveData<>();
+        if (mNetworkMovieList != null && mNetworkMovieList.getValue() != null) {
+            mNetworkMovieList.getValue().clear();
+        }
     }
 
     //
