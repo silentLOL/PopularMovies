@@ -155,9 +155,7 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
     private void subscribeOnNetworkMovieList() {
         Log.d(TAG, "Subscribing to network movie list");
         final Observer<List<Movie>> networkMovieDataObserver = movieData -> {
-            if (viewModel.getSortMoviesBy() != MoviesOrder.FAVORITES) {
-                updateAdapterData(movieData);
-            }
+            Log.d(TAG, "received a new list of network movie data");
             updateAdapterData(movieData);
         };
         viewModel.getNetworkMovieList().observe(this, networkMovieDataObserver);
@@ -235,6 +233,9 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
+        viewModel.getNetworkMovieList().removeObservers(this);
+        viewModel.getFavoritesMovieList().removeObservers(this);
+        viewModel.getNetworkMovieList().removeObservers(this);
         //unregister listener
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
     }
