@@ -2,12 +2,12 @@ package at.stefanirndorfer.popularmovies.view;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,13 +18,15 @@ import at.stefanirndorfer.popularmovies.R;
 import at.stefanirndorfer.popularmovies.database.AppDataBase;
 import at.stefanirndorfer.popularmovies.databinding.ActivityDetailBinding;
 import at.stefanirndorfer.popularmovies.model.Movie;
-import at.stefanirndorfer.popularmovies.model.MoviesOrder;
+import at.stefanirndorfer.popularmovies.model.TrailerQueryResponse;
 import at.stefanirndorfer.popularmovies.viewmodel.DetailActivityViewModel;
 
 public class DetailActivity extends AppCompatActivity implements InternetDialogListener {
 
     private static final String TAG = DetailActivity.class.getName();
     private static final String INTERNET_DIALOG_TAG = "internet_dialog_tag";
+    public static final String VND_YOUTUBE = "vnd.youtube:";
+    public static final String WEB_YOUTUBE = "http://www.youtube.com/watch?v=";
 
     private DetailActivityViewModel viewModel;
     private ActivityDetailBinding mBinding;
@@ -43,16 +45,8 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         initViewModel(movie);
         subscribeOnViewModelDataUpdates();
         // we want to find out if the displayed movie comes from our favorite database by
-        //checkIfSortOrderIsFavorite();
         viewModel.checkIfMovieIsFavorite();
         viewModel.checkInternetConnection();
-    }
-
-    private boolean checkIfSortOrderIsFavorite() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String sortOrder = sharedPreferences.getString(getString(R.string.pref_order_key),
-                getResources().getString(R.string.pref_order_popular_value));
-        return sortOrder.equals(MoviesOrder.FAVORITES.toString());
     }
 
 
@@ -80,8 +74,31 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
     private void subscribeOnViewModelDataUpdates() {
         subscribeOnImage();
         subscribeOnHasInternetConnection();
+        subscribeOnTrailerData();
+        subsdribeOnTrailerLoadingError();
         subscribeOnIsFavoriteMovie();
     }
+
+    private void subsdribeOnTrailerLoadingError() {
+        final Observer<Throwable> trailerErrorResponseObserver = (Throwable t) -> {
+            Log.e(TAG, "Error loading trailer data: " + t.getMessage());
+            setUpNoTrailerAvailableUI();
+        };
+        viewModel.getTrailerRequestError().observe(this, trailerErrorResponseObserver);
+    }
+
+    private void subscribeOnTrailerData() {
+        final Observer<TrailerQueryResponse> trailerQueryResponseObserver = (TrailerQueryResponse response) -> {
+            //TODO: Implement a RecyclerView and list all trailers -- for now we pick the first one
+            if (response != null && response.getTrailerData() != null && !response.getTrailerData().isEmpty()) {
+                setUpTrailerUIVisible();
+            } else {
+                setUpNoTrailerAvailableUI();
+            }
+        };
+        viewModel.getTrailerQueryResponse().observe(this, trailerQueryResponseObserver);
+    }
+
 
     private void subscribeOnIsFavoriteMovie() {
         final Observer<Boolean> isFavoriteMovieObserver = this::updateIsFavoirteMovieIndicator;
@@ -96,6 +113,7 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
             } else {
                 // we only request remote data if internet connection is given
                 viewModel.fetchMovieImage(mBinding.ivMoviePoster);
+                requestTrailers();
                 populateUI();
             }
         };
@@ -132,8 +150,31 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
     }
 
 
+    private void requestTrailers() {
+        viewModel.requestTrailerData();
+        //set LoadingSpinner visible
+        mBinding.trailerLayout.trailerErrorTv.setVisibility(View.GONE);
+        mBinding.trailerLayout.trailerLoadingPb.setVisibility(View.VISIBLE);
+        mBinding.trailerLayout.playButton.setVisibility(View.GONE);
+        mBinding.trailerLayout.trailerLabelTv.setVisibility(View.GONE);
+    }
+
+    private void setUpTrailerUIVisible() {
+        mBinding.trailerLayout.trailerErrorTv.setVisibility(View.GONE);
+        mBinding.trailerLayout.trailerLoadingPb.setVisibility(View.GONE);
+        mBinding.trailerLayout.playButton.setVisibility(View.VISIBLE);
+        mBinding.trailerLayout.trailerLabelTv.setVisibility(View.VISIBLE);
+    }
+
+    private void setUpNoTrailerAvailableUI() {
+        mBinding.trailerLayout.trailerErrorTv.setVisibility(View.VISIBLE);
+        mBinding.trailerLayout.trailerLoadingPb.setVisibility(View.GONE);
+        mBinding.trailerLayout.playButton.setVisibility(View.GONE);
+        mBinding.trailerLayout.trailerLabelTv.setVisibility(View.GONE);
+    }
+
     private void updateIsFavoirteMovieIndicator(boolean isFavorite) {
-        if (isFavorite){
+        if (isFavorite) {
             mBinding.favButtons.btFavoritesOn.setVisibility(View.VISIBLE);
             mBinding.favButtons.btFavoritesOff.setVisibility(View.GONE);
         } else {
@@ -191,6 +232,16 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
     }
 
     public void playTrailer(View view) {
+        String videoId = viewModel.getTrailerKey();
+        Log.d(TAG, WEB_YOUTUBE + videoId);
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(VND_YOUTUBE + videoId));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse(WEB_YOUTUBE + videoId));
+        try {
+            startActivity(appIntent);
+        } catch (ActivityNotFoundException ex) {
+            startActivity(webIntent);
+        }
 
     }
 }

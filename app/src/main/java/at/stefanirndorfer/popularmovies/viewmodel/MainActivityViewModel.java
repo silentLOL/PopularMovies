@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import at.stefanirndorfer.popularmovies.database.AppDataBase;
@@ -18,7 +17,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivityViewModel extends InternetAwareLiveDataViewModel {
+public class MainActivityViewModel extends InternetAwareViewModel {
 
     private static final String TAG = MainActivityViewModel.class.getName();
     public static final MoviesOrder DEFAULT_ORDER = MoviesOrder.POPULAR;

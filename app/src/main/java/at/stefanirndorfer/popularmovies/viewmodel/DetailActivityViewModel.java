@@ -12,7 +12,8 @@ import com.squareup.picasso.Target;
 
 import at.stefanirndorfer.popularmovies.database.AppDataBase;
 import at.stefanirndorfer.popularmovies.model.Movie;
-import at.stefanirndorfer.popularmovies.model.MovieQueryResponse;
+import at.stefanirndorfer.popularmovies.model.TrailerData;
+import at.stefanirndorfer.popularmovies.model.TrailerQueryResponse;
 import at.stefanirndorfer.popularmovies.network.RequestMoviesService;
 import at.stefanirndorfer.popularmovies.network.RetrofitClientInstance;
 import at.stefanirndorfer.popularmovies.utils.ApiConstants;
@@ -22,15 +23,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DetailActivityViewModel extends InternetAwareLiveDataViewModel {
+public class DetailActivityViewModel extends InternetAwareViewModel {
 
     private static final String TAG = DetailActivityViewModel.class.getName();
+    public static final String PREFERRED_VIDEO_SITE = "YouTube";
     AppDataBase mDataBase;
 
 
-    MutableLiveData<Bitmap> mImage = new MutableLiveData<>();
+    private MutableLiveData<Bitmap> mImage = new MutableLiveData<>();
+    private MutableLiveData<TrailerQueryResponse> mTrailerQueryResponse = new MutableLiveData<>();
+    private MutableLiveData<Throwable> mTrailerRequestError = new MutableLiveData<>();
     private MutableLiveData<Boolean> mIsFavorite = new MutableLiveData<>();
     private Movie mMovie;
+    private String mTrailerKey;
 
     public void setMovie(Movie movie) {
         this.mMovie = movie;
@@ -63,27 +68,41 @@ public class DetailActivityViewModel extends InternetAwareLiveDataViewModel {
         }
     }
 
-    public void requestTrailerUrl(){
+    public void requestTrailerData() {
         RequestMoviesService service = RetrofitClientInstance.getRetrofitInstance().create(RequestMoviesService.class);
-        Call<String> call = service.getTrailerUrl(String.valueOf(mMovie.getId()));
+        Call<TrailerQueryResponse> call = service.getTrailerUrl(String.valueOf(mMovie.getId()), ApiConstants.API_KEY);
         Log.d(TAG, call.request().toString());
-        call.enqueue(new Callback<String>() {
+        call.enqueue(new Callback<TrailerQueryResponse>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                Log.d(TAG, "Received trailer url");
+            public void onResponse(Call<TrailerQueryResponse> call, Response<TrailerQueryResponse> response) {
+                Log.d(TAG, "Received trailer data");
                 if (response.body() != null) {
-                    String result = response.body();
-                    if (result != null && !TextUtils.isEmpty(result)) {
-                       Log.d(TAG, "Trailer url received: " + result);
+                    TrailerQueryResponse result = response.body();
+                    if (result != null) {
+                        extractTrailerKeyAndPostData(result);
                     }
+                } else if (response.errorBody() != null) {
+                    mTrailerRequestError.postValue(new Throwable(response.errorBody().toString()));
                 }
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<TrailerQueryResponse> call, Throwable t) {
                 Log.e(TAG, "Error calling for a movie trailer: " + t.getMessage());
+                mTrailerRequestError.postValue(t);
             }
         });
+    }
+
+    private void extractTrailerKeyAndPostData(TrailerQueryResponse result) {
+        for (TrailerData currElem : result.getTrailerData()) {
+            if (currElem.getSite().equals(PREFERRED_VIDEO_SITE)) {
+                mTrailerKey = currElem.getKey();
+                mTrailerQueryResponse.postValue(result);
+                return;
+            }
+            mTrailerRequestError.postValue(new Throwable("No video of preferred type: " + PREFERRED_VIDEO_SITE + " found"));
+        }
     }
 
     /**
@@ -110,10 +129,10 @@ public class DetailActivityViewModel extends InternetAwareLiveDataViewModel {
     /**
      * queries the favorite movies database to check if movie is stored
      */
-    public void checkIfMovieIsFavorite(){
+    public void checkIfMovieIsFavorite() {
         AppExecutors.getInstance().diskIO().execute(() -> {
-           Movie m =  mDataBase.movieDao().loadMovieById(mMovie.getId());
-           mIsFavorite.postValue(m != null);
+            Movie m = mDataBase.movieDao().loadMovieById(mMovie.getId());
+            mIsFavorite.postValue(m != null);
         });
     }
 
@@ -127,6 +146,14 @@ public class DetailActivityViewModel extends InternetAwareLiveDataViewModel {
 
     public MutableLiveData<Boolean> isFavorite() {
         return mIsFavorite;
+    }
+
+    public MutableLiveData<TrailerQueryResponse> getTrailerQueryResponse() {
+        return mTrailerQueryResponse;
+    }
+
+    public MutableLiveData<Throwable> getTrailerRequestError() {
+        return mTrailerRequestError;
     }
 
     //
@@ -196,5 +223,11 @@ public class DetailActivityViewModel extends InternetAwareLiveDataViewModel {
         return "";
     }
 
-
+    /**
+     *
+     * @returns the Key of a movies trailer needed to start trailer-intent
+     */
+    public String getTrailerKey() {
+        return mTrailerKey;
+    }
 }

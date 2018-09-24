@@ -7,9 +7,9 @@ import android.util.Log;
 
 import at.stefanirndorfer.popularmovies.utils.PopularMoviesUtils;
 
-public abstract class InternetAwareLiveDataViewModel extends ViewModel {
+public abstract class InternetAwareViewModel extends ViewModel {
 
-    private static final String TAG = InternetAwareLiveDataViewModel.class.getName();
+    private static final String TAG = InternetAwareViewModel.class.getName();
     private MutableLiveData<Boolean> mHasInternetConnection = new MutableLiveData<>();
 
     public void checkInternetConnection(){

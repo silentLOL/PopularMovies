@@ -31,4 +31,6 @@
     <string name="title_activity_settings">Settings</string>
     <string name="lorem_ipsum">Where does it come from? Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur</string>
     <string name="trailer_label">Watch Trailer</string>
+    <string name="trailer_error_msg">No Trailer available</string>
+    <string name="content_description_play_button">Play button to start trailer</string>
 </resources>
