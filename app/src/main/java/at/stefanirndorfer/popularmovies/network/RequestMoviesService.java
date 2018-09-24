@@ -13,4 +13,9 @@ public interface RequestMoviesService {
             @Path("sort_by") String sortBy,
             @Query("api_key") String api_key,
             @Query("page") Integer page);
+
+    @GET("/movie/{id}/videos")
+    Call<String> getTrailerUrl(
+            @Path("id") String id;
+    );
 }

@@ -12,8 +12,15 @@ import com.squareup.picasso.Target;
 
 import at.stefanirndorfer.popularmovies.database.AppDataBase;
 import at.stefanirndorfer.popularmovies.model.Movie;
+import at.stefanirndorfer.popularmovies.model.MovieQueryResponse;
+import at.stefanirndorfer.popularmovies.network.RequestMoviesService;
+import at.stefanirndorfer.popularmovies.network.RetrofitClientInstance;
+import at.stefanirndorfer.popularmovies.utils.ApiConstants;
 import at.stefanirndorfer.popularmovies.utils.AppExecutors;
 import at.stefanirndorfer.popularmovies.utils.PopularMoviesConstants;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DetailActivityViewModel extends InternetAwareLiveDataViewModel {
 
@@ -54,6 +61,29 @@ public class DetailActivityViewModel extends InternetAwareLiveDataViewModel {
             //this will be handled by the view
             mImage.postValue(null);
         }
+    }
+
+    public void requestTrailerUrl(){
+        RequestMoviesService service = RetrofitClientInstance.getRetrofitInstance().create(RequestMoviesService.class);
+        Call<String> call = service.getTrailerUrl(String.valueOf(mMovie.getId()));
+        Log.d(TAG, call.request().toString());
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.d(TAG, "Received trailer url");
+                if (response.body() != null) {
+                    String result = response.body();
+                    if (result != null && !TextUtils.isEmpty(result)) {
+                       Log.d(TAG, "Trailer url received: " + result);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e(TAG, "Error calling for a movie trailer: " + t.getMessage());
+            }
+        });
     }
 
     /**
