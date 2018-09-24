@@ -142,14 +142,23 @@
             tools:text="40" />
 
         <View
-            android:id="@+id/view"
+            android:id="@+id/divider"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
             android:background="@color/colorPrimaryDark"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/vote_count_view" />
+
+        <include
+            android:id="@+id/trailer_layout"
+            layout="@layout/trailer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/overview_tv" />
+
 
         <TextView
             android:id="@+id/label_original_language_tv"
@@ -159,7 +168,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/detail_original_language_label"
             app:layout_constraintStart_toStartOf="@+id/iv_movie_poster"
-            app:layout_constraintTop_toBottomOf="@+id/view" />
+            app:layout_constraintTop_toBottomOf="@+id/trailer_layout" />
 
 
         <TextView
@@ -201,8 +210,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/iv_movie_poster"
-            app:layout_constraintTop_toBottomOf="@+id/iv_movie_poster"
-            tools:text="@string/lorem_ipsum" />
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            tools:text="Hello I am the description" />
 
 
         <TextView
@@ -223,6 +232,7 @@
             app:layout_constraintStart_toStartOf="@+id/original_title_tv"
             app:layout_constraintTop_toTopOf="@+id/label_genres_tv"
             tools:text="Drama, Thriller, Comedy" />
+
 
     </android.support.constraint.ConstraintLayout>
     <!--></ScrollView>

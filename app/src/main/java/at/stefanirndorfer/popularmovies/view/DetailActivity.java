@@ -190,4 +190,7 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         Log.d(TAG, "onResume");
     }
 
+    public void playTrailer(View view) {
+
+    }
 }
