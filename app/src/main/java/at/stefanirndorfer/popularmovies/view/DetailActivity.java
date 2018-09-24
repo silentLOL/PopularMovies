@@ -35,7 +35,6 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         Log.d(TAG, "onCreate");
-
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
         Movie movie = extractMovieFromIntent();
         if (movie != null && movie.getTitle() != null) {
@@ -135,11 +134,11 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
 
     private void updateIsFavoirteMovieIndicator(boolean isFavorite) {
         if (isFavorite){
-            mBinding.btFavoritesOn.setVisibility(View.VISIBLE);
-            mBinding.btFavoritesOff.setVisibility(View.GONE);
+            mBinding.favButtons.btFavoritesOn.setVisibility(View.VISIBLE);
+            mBinding.favButtons.btFavoritesOff.setVisibility(View.GONE);
         } else {
-            mBinding.btFavoritesOn.setVisibility(View.GONE);
-            mBinding.btFavoritesOff.setVisibility(View.VISIBLE);
+            mBinding.favButtons.btFavoritesOn.setVisibility(View.GONE);
+            mBinding.favButtons.btFavoritesOff.setVisibility(View.VISIBLE);
 
         }
     }
