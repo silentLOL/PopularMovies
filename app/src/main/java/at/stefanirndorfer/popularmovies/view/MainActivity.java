@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
         setUpRecycleView();
         initViewModel();
         setupSharedPreferences();
+        subscribeOnInternetObserver();
+        updateLiveDataSubscription();
         viewModel.checkInternetConnection();
     }
 
@@ -108,8 +110,6 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         viewModel.setDataBase(AppDataBase.getInstance(getApplicationContext()));
         viewModel.doFavoriteMovieDatabaseQuery();
-        subscribeOnInternetObserver();
-        updateLiveDataSubscription();
     }
 
     private void updateLiveDataSubscription() {
