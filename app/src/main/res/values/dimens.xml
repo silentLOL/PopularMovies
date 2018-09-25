@@ -5,4 +5,5 @@
     <dimen name="vote_value_size">22sp</dimen>
     <dimen name="label_text_size">12sp</dimen>
     <dimen name="detail_tv_padding">20dp</dimen>
+    <dimen name="reviews_list_item_height">36dp</dimen>
 </resources>

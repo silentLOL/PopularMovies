@@ -70,7 +70,7 @@ public class DetailActivityViewModel extends InternetAwareViewModel {
 
     public void requestTrailerData() {
         RequestMoviesService service = RetrofitClientInstance.getRetrofitInstance().create(RequestMoviesService.class);
-        Call<TrailerQueryResponse> call = service.getTrailerUrl(String.valueOf(mMovie.getId()), ApiConstants.API_KEY);
+        Call<TrailerQueryResponse> call = service.getTrailerData(String.valueOf(mMovie.getId()), ApiConstants.API_KEY);
         Log.d(TAG, call.request().toString());
         call.enqueue(new Callback<TrailerQueryResponse>() {
             @Override

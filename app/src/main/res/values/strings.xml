@@ -33,4 +33,6 @@
     <string name="trailer_label">Watch Trailer</string>
     <string name="trailer_error_msg">No Trailer available</string>
     <string name="content_description_play_button">Play button to start trailer</string>
+    <string name="reviews_label_text">Read Reviews:</string>
+    <string name="reviews_error_msg">No Reviews available</string>
 </resources>

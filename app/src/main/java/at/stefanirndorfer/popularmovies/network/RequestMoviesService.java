@@ -17,7 +17,13 @@ public interface RequestMoviesService {
     );
 
     @GET("3/movie/{id}/videos")
-    Call<TrailerQueryResponse> getTrailerUrl(
+    Call<TrailerQueryResponse> getTrailerData(
+            @Path("id") String id,
+            @Query("api_key") String api_key
+    );
+
+    @GET("3/movie/{id}/reviews")
+    Call<TrailerQueryResponse> getReviewData(
             @Path("id") String id,
             @Query("api_key") String api_key
     );

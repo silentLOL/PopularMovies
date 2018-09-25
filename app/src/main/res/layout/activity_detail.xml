@@ -140,6 +140,18 @@
                 app:layout_constraintStart_toStartOf="@+id/vote_count_tv"
                 tools:text="40" />
 
+            <TextView
+                android:id="@+id/overview_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/iv_movie_poster"
+                app:layout_constraintTop_toBottomOf="@+id/divider"
+                tools:text="Hello I am the description" />
+
             <View
                 android:id="@+id/divider"
                 android:layout_width="0dp"
@@ -158,6 +170,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/overview_tv" />
 
+            <include
+                android:id="@+id/reviews_layout"
+                layout="@layout/reviews_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/trailer_layout" />
+
+
 
             <TextView
                 android:id="@+id/label_original_language_tv"
@@ -167,7 +189,7 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/detail_original_language_label"
                 app:layout_constraintStart_toStartOf="@+id/iv_movie_poster"
-                app:layout_constraintTop_toBottomOf="@+id/trailer_layout" />
+                app:layout_constraintTop_toBottomOf="@+id/reviews_layout" />
 
 
             <TextView
@@ -199,18 +221,6 @@
                 app:layout_constraintBottom_toBottomOf="@+id/label_original_title_tv"
                 app:layout_constraintStart_toStartOf="@+id/original_language_tv"
                 tools:text="Hallo zusammen" />
-
-            <TextView
-                android:id="@+id/overview_tv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="32dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/iv_movie_poster"
-                app:layout_constraintTop_toBottomOf="@+id/divider"
-                tools:text="Hello I am the description" />
 
 
             <TextView

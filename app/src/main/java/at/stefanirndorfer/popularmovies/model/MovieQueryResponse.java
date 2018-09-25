@@ -12,10 +12,10 @@ public class MovieQueryResponse {
     @SerializedName("total_results")
     private Integer totalResults;
 
-     @SerializedName("total_pages")
+    @SerializedName("total_pages")
     private Integer totalPages;
 
-     @SerializedName("results")
+    @SerializedName("results")
     private List<Movie> movies;
 
     public MovieQueryResponse(Integer page, Integer totalResults, Integer totalPages, List<Movie> movies) {
