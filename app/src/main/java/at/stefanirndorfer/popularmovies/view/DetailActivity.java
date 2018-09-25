@@ -9,19 +9,22 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import at.stefanirndorfer.popularmovies.R;
+import at.stefanirndorfer.popularmovies.adapter.ReviewsAdapter;
 import at.stefanirndorfer.popularmovies.database.AppDataBase;
 import at.stefanirndorfer.popularmovies.databinding.ActivityDetailBinding;
 import at.stefanirndorfer.popularmovies.model.Movie;
 import at.stefanirndorfer.popularmovies.model.TrailerQueryResponse;
 import at.stefanirndorfer.popularmovies.viewmodel.DetailActivityViewModel;
 
-public class DetailActivity extends AppCompatActivity implements InternetDialogListener {
+public class DetailActivity extends AppCompatActivity implements InternetDialogListener, ReviewsAdapter.ReviewListItemClickListener {
 
     private static final String TAG = DetailActivity.class.getName();
     private static final String INTERNET_DIALOG_TAG = "internet_dialog_tag";
@@ -30,6 +33,9 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
 
     private DetailActivityViewModel viewModel;
     private ActivityDetailBinding mBinding;
+    private RecyclerView mRecyclerViewReviews;
+    private LinearLayoutManager mLinearLayoutManager;
+    private ReviewsAdapter mReviewAdapter;
 
 
     @Override
@@ -42,11 +48,22 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         if (movie != null && movie.getTitle() != null) {
             setTitle(movie.getTitle());
         }
+        setUpRecycleView();
         initViewModel(movie);
         subscribeOnViewModelDataUpdates();
         // we want to find out if the displayed movie comes from our favorite database by
         viewModel.checkIfMovieIsFavorite();
         viewModel.checkInternetConnection();
+    }
+
+    private void setUpRecycleView() {
+        Log.d(TAG, "Setting up RecyclerView");
+        mRecyclerViewReviews = findViewById(R.id.recyclerview_reviews);
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerViewReviews.setLayoutManager(mLinearLayoutManager);
+        mRecyclerViewReviews.setHasFixedSize(true);
+        mReviewAdapter = new ReviewsAdapter(this);
+        mRecyclerViewReviews.setAdapter(mReviewAdapter);
     }
 
 
@@ -114,10 +131,19 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
                 // we only request remote data if internet connection is given
                 viewModel.fetchMovieImage(mBinding.ivMoviePoster);
                 requestTrailers();
+                requestReviews();
                 populateUI();
             }
         };
         viewModel.isInternetConnected().observe(this, hasInternetObserver);
+    }
+
+    private void requestReviews() {
+        viewModel.requestReviewData();
+        //set LoadingSpinner visible
+        mBinding.reviewsLayout.reviewsErrorTv.setVisibility(View.GONE);
+        mBinding.reviewsLayout.reviewsLoadingPb.setVisibility(View.VISIBLE);
+        mBinding.reviewsLayout.reviewLabelTv.setVisibility(View.GONE);
     }
 
     private void subscribeOnImage() {
@@ -242,6 +268,12 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         } catch (ActivityNotFoundException ex) {
             startActivity(webIntent);
         }
+    }
 
+    @Override
+    public void onReviewListItemClick(int clickedItemIndex, String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse(url));
+        startActivity(intent);
     }
 }

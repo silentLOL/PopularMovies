@@ -230,4 +230,9 @@ public class DetailActivityViewModel extends InternetAwareViewModel {
     public String getTrailerKey() {
         return mTrailerKey;
     }
+
+    //TODO
+    public void requestReviewData() {
+
+    }
 }

@@ -2,7 +2,7 @@ package at.stefanirndorfer.popularmovies.model;
 
 import com.google.gson.annotations.SerializedName;
 
-class Review {
+public class Review {
 
     @SerializedName("author")
     private String author;
