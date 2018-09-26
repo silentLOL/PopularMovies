@@ -1,6 +1,7 @@
 package at.stefanirndorfer.popularmovies.network;
 
 import at.stefanirndorfer.popularmovies.model.MovieQueryResponse;
+import at.stefanirndorfer.popularmovies.model.ReviewsQueryResponse;
 import at.stefanirndorfer.popularmovies.model.TrailerQueryResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -23,7 +24,7 @@ public interface RequestMoviesService {
     );
 
     @GET("3/movie/{id}/reviews")
-    Call<TrailerQueryResponse> getReviewData(
+    Call<ReviewsQueryResponse> getReviewData(
             @Path("id") String id,
             @Query("api_key") String api_key
     );

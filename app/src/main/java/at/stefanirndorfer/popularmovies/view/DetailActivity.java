@@ -21,6 +21,8 @@ import at.stefanirndorfer.popularmovies.adapter.ReviewsAdapter;
 import at.stefanirndorfer.popularmovies.database.AppDataBase;
 import at.stefanirndorfer.popularmovies.databinding.ActivityDetailBinding;
 import at.stefanirndorfer.popularmovies.model.Movie;
+import at.stefanirndorfer.popularmovies.model.Review;
+import at.stefanirndorfer.popularmovies.model.ReviewsQueryResponse;
 import at.stefanirndorfer.popularmovies.model.TrailerQueryResponse;
 import at.stefanirndorfer.popularmovies.viewmodel.DetailActivityViewModel;
 
@@ -93,7 +95,17 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         subscribeOnHasInternetConnection();
         subscribeOnTrailerData();
         subsdribeOnTrailerLoadingError();
+        subscribeOnReviewData();
+        subsdribeOnReviewsLoadingError();
         subscribeOnIsFavoriteMovie();
+    }
+
+    private void subsdribeOnReviewsLoadingError() {
+        final Observer<Throwable> reviewsErrorResponseObserver = (Throwable t) -> {
+            Log.e(TAG, "Error loading review data: " + t.getMessage());
+            setUpNoReviewsAvailableUI();
+        };
+        viewModel.getTrailerRequestError().observe(this, reviewsErrorResponseObserver);
     }
 
     private void subsdribeOnTrailerLoadingError() {
@@ -114,6 +126,20 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
             }
         };
         viewModel.getTrailerQueryResponse().observe(this, trailerQueryResponseObserver);
+    }
+
+
+    private void subscribeOnReviewData() {
+        final Observer<ReviewsQueryResponse> reviewsQueryResponseObserver = (ReviewsQueryResponse response) -> {
+            //TODO: Implement a RecyclerView and list all trailers -- for now we pick the first one
+            if (response != null && response.getReviews() != null && !response.getReviews().isEmpty()) {
+                setUpReviewsUIVisible();
+                mReviewAdapter.setReviewData(response.getReviews().toArray(new Review[0]));
+            } else {
+                setUpNoReviewsAvailableUI();
+            }
+        };
+        viewModel.getReviewsQueryResponse().observe(this, reviewsQueryResponseObserver);
     }
 
 
@@ -138,13 +164,6 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         viewModel.isInternetConnected().observe(this, hasInternetObserver);
     }
 
-    private void requestReviews() {
-        viewModel.requestReviewData();
-        //set LoadingSpinner visible
-        mBinding.reviewsLayout.reviewsErrorTv.setVisibility(View.GONE);
-        mBinding.reviewsLayout.reviewsLoadingPb.setVisibility(View.VISIBLE);
-        mBinding.reviewsLayout.reviewLabelTv.setVisibility(View.GONE);
-    }
 
     private void subscribeOnImage() {
         final Observer<Bitmap> movieImageObserver = bitmap -> {
@@ -173,6 +192,26 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         handleStringResult(viewModel.getGenresString(), mBinding.genresTv);
         handleStringResult(viewModel.getOverviewString(), mBinding.overviewTv);
         handleStringResult(viewModel.getReleaseYear(), mBinding.releaseDateTv);
+    }
+
+    private void requestReviews() {
+        viewModel.requestReviewData();
+        //set LoadingSpinner visible
+        mBinding.reviewsLayout.reviewsErrorTv.setVisibility(View.GONE);
+        mBinding.reviewsLayout.reviewsLoadingPb.setVisibility(View.VISIBLE);
+        mBinding.reviewsLayout.reviewLabelTv.setVisibility(View.GONE);
+    }
+
+    private void setUpReviewsUIVisible() {
+        mBinding.reviewsLayout.reviewsErrorTv.setVisibility(View.GONE);
+        mBinding.reviewsLayout.reviewsLoadingPb.setVisibility(View.GONE);
+        mBinding.reviewsLayout.reviewLabelTv.setVisibility(View.VISIBLE);
+    }
+
+    private void setUpNoReviewsAvailableUI() {
+        mBinding.reviewsLayout.reviewsErrorTv.setVisibility(View.VISIBLE);
+        mBinding.reviewsLayout.reviewsLoadingPb.setVisibility(View.GONE);
+        mBinding.reviewsLayout.reviewLabelTv.setVisibility(View.GONE);
     }
 
 
@@ -262,7 +301,7 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         Log.d(TAG, WEB_YOUTUBE + videoId);
         Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(VND_YOUTUBE + videoId));
         Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                Uri.parse(WEB_YOUTUBE + videoId));
+                                      Uri.parse(WEB_YOUTUBE + videoId));
         try {
             startActivity(appIntent);
         } catch (ActivityNotFoundException ex) {
@@ -272,8 +311,9 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
 
     @Override
     public void onReviewListItemClick(int clickedItemIndex, String url) {
+        Log.d(TAG, "Click event on trailer received");
         Intent intent = new Intent(Intent.ACTION_VIEW,
-                Uri.parse(url));
+                                   Uri.parse(url));
         startActivity(intent);
     }
 }

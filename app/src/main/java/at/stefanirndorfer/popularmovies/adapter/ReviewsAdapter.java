@@ -45,8 +45,10 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
         Review currElem = mReviewData[position];
-        holder.mTitleTextView.setText(currElem.getContent());
-        holder.mAuthorTextView.setText(currElem.getAuthor());
+        String review_text = holder.itemView.getContext().getString(R.string.review_list_item_text);
+        String by_text = holder.itemView.getContext().getString(R.string.by);
+        String review_caption = review_text + " " + (position + 1) + " " + by_text  + " " +  currElem.getAuthor();
+        holder.mTitleTextView.setText(review_caption);
         holder.mUrl = currElem.getUrl();
     }
 
@@ -61,13 +63,12 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
     public class ReviewViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
-        public final TextView mAuthorTextView;
         public final TextView mTitleTextView;
         public String mUrl;
 
         public ReviewViewHolder(View itemView) {
             super(itemView);
-            mAuthorTextView = itemView.findViewById(R.id.review_author_tv);
+            itemView.setOnClickListener(this);
             mTitleTextView = itemView.findViewById(R.id.review_title_tv);
             mUrl = null;
         }

@@ -35,4 +35,6 @@
     <string name="content_description_play_button">Play button to start trailer</string>
     <string name="reviews_label_text">Read Reviews:</string>
     <string name="reviews_error_msg">No Reviews available</string>
+    <string name="review_list_item_text">Review</string>
+    <string name="by">by</string>
 </resources>

@@ -1,5 +1,6 @@
 package at.stefanirndorfer.popularmovies.viewmodel;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -12,6 +13,7 @@ import com.squareup.picasso.Target;
 
 import at.stefanirndorfer.popularmovies.database.AppDataBase;
 import at.stefanirndorfer.popularmovies.model.Movie;
+import at.stefanirndorfer.popularmovies.model.ReviewsQueryResponse;
 import at.stefanirndorfer.popularmovies.model.TrailerData;
 import at.stefanirndorfer.popularmovies.model.TrailerQueryResponse;
 import at.stefanirndorfer.popularmovies.network.RequestMoviesService;
@@ -32,7 +34,9 @@ public class DetailActivityViewModel extends InternetAwareViewModel {
 
     private MutableLiveData<Bitmap> mImage = new MutableLiveData<>();
     private MutableLiveData<TrailerQueryResponse> mTrailerQueryResponse = new MutableLiveData<>();
+    private MutableLiveData<ReviewsQueryResponse> mReviewsQueryResponse = new MutableLiveData<>();
     private MutableLiveData<Throwable> mTrailerRequestError = new MutableLiveData<>();
+    private MutableLiveData<Throwable> mReviewsRequestError = new MutableLiveData<>();
     private MutableLiveData<Boolean> mIsFavorite = new MutableLiveData<>();
     private Movie mMovie;
     private String mTrailerKey;
@@ -94,6 +98,32 @@ public class DetailActivityViewModel extends InternetAwareViewModel {
         });
     }
 
+    public void requestReviewData() {
+        RequestMoviesService service = RetrofitClientInstance.getRetrofitInstance().create(RequestMoviesService.class);
+        Call<ReviewsQueryResponse> call = service.getReviewData(String.valueOf(mMovie.getId()), ApiConstants.API_KEY);
+        Log.d(TAG, call.request().toString());
+        call.enqueue(new Callback<ReviewsQueryResponse>() {
+            @Override
+            public void onResponse(Call<ReviewsQueryResponse> call, Response<ReviewsQueryResponse> response) {
+                Log.d(TAG, "Received reviews data");
+                if (response.body() != null) {
+                    ReviewsQueryResponse result = response.body();
+                    if (result != null) {
+                        mReviewsQueryResponse.postValue(result);
+                    }
+                } else if (response.errorBody() != null) {
+                    mReviewsRequestError.postValue(new Throwable(response.errorBody().toString()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ReviewsQueryResponse> call, Throwable t) {
+                Log.e(TAG, "Error calling for a movie reviews: " + t.getMessage());
+                mReviewsRequestError.postValue(t);
+            }
+        });
+    }
+
     private void extractTrailerKeyAndPostData(TrailerQueryResponse result) {
         for (TrailerData currElem : result.getTrailerData()) {
             if (currElem.getSite().equals(PREFERRED_VIDEO_SITE)) {
@@ -151,9 +181,16 @@ public class DetailActivityViewModel extends InternetAwareViewModel {
     public MutableLiveData<TrailerQueryResponse> getTrailerQueryResponse() {
         return mTrailerQueryResponse;
     }
-
     public MutableLiveData<Throwable> getTrailerRequestError() {
         return mTrailerRequestError;
+    }
+
+    public MutableLiveData<Throwable> getReviewRequestError() {
+        return mReviewsRequestError;
+    }
+
+    public LiveData<ReviewsQueryResponse> getReviewsQueryResponse() {
+        return mReviewsQueryResponse;
     }
 
     //
@@ -231,8 +268,5 @@ public class DetailActivityViewModel extends InternetAwareViewModel {
         return mTrailerKey;
     }
 
-    //TODO
-    public void requestReviewData() {
 
-    }
 }
