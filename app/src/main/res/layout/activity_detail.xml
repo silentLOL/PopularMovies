@@ -182,10 +182,10 @@
 
             <TextView
                 android:id="@+id/label_original_language_tv"
-                style="@style/DetailLabelSmall"
+                style="@style/VoteCountStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:text="@string/detail_original_language_label"
                 app:layout_constraintStart_toStartOf="@+id/iv_movie_poster"
                 app:layout_constraintTop_toBottomOf="@+id/reviews_layout" />
@@ -193,7 +193,7 @@
 
             <TextView
                 android:id="@+id/original_language_tv"
-                style="@style/VoteCountStyle"
+                style="@style/DetailLabelSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -203,7 +203,7 @@
 
             <TextView
                 android:id="@+id/label_original_title_tv"
-                style="@style/DetailLabelSmall"
+                style="@style/VoteCountStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -214,7 +214,7 @@
 
             <TextView
                 android:id="@+id/original_title_tv"
-                style="@style/VoteCountStyle"
+                style="@style/DetailLabelSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@+id/label_original_title_tv"
@@ -223,7 +223,7 @@
 
             <TextView
                 android:id="@+id/label_genres_tv"
-                style="@style/DetailLabelSmall"
+                style="@style/VoteCountStyle"
                 android:layout_width="@dimen/label_width"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -233,7 +233,7 @@
 
             <TextView
                 android:id="@+id/genres_tv"
-                style="@style/VoteCountStyle"
+                style="@style/DetailLabelSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"

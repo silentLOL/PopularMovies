@@ -52,6 +52,13 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/reviews_label_container" />
 
-    </android.support.constraint.ConstraintLayout>
+        <View
+            android:id="@+id/reviews_bottom_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerview_reviews" />
 
+    </android.support.constraint.ConstraintLayout>
+    
 </layout>

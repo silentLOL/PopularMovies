@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.Iterator;
 import java.util.List;
 
 import at.stefanirndorfer.popularmovies.R;
@@ -28,7 +27,6 @@ import at.stefanirndorfer.popularmovies.model.Movie;
 import at.stefanirndorfer.popularmovies.model.Review;
 import at.stefanirndorfer.popularmovies.model.ReviewsQueryResponse;
 import at.stefanirndorfer.popularmovies.model.TrailerData;
-import at.stefanirndorfer.popularmovies.model.TrailerQueryResponse;
 import at.stefanirndorfer.popularmovies.viewmodel.DetailActivityViewModel;
 
 public class DetailActivity extends AppCompatActivity implements InternetDialogListener, ReviewsAdapter.ReviewListItemClickListener, TrailersAdapter.TrailerListItemClickListener {
@@ -116,21 +114,21 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         subscribeOnImage();
         subscribeOnHasInternetConnection();
         subscribeOnTrailerData();
-        subsdribeOnTrailerLoadingError();
+        subscribeOnTrailerLoadingError();
         subscribeOnReviewData();
-        subsdribeOnReviewsLoadingError();
+        subscribeOnReviewsLoadingError();
         subscribeOnIsFavoriteMovie();
     }
 
-    private void subsdribeOnReviewsLoadingError() {
+    private void subscribeOnReviewsLoadingError() {
         final Observer<Throwable> reviewsErrorResponseObserver = (Throwable t) -> {
             Log.e(TAG, "Error loading review data: " + t.getMessage());
             setUpNoReviewsAvailableUI();
         };
-        viewModel.getTrailerRequestError().observe(this, reviewsErrorResponseObserver);
+        viewModel.getReviewRequestError().observe(this, reviewsErrorResponseObserver);
     }
 
-    private void subsdribeOnTrailerLoadingError() {
+    private void subscribeOnTrailerLoadingError() {
         final Observer<Throwable> trailerErrorResponseObserver = (Throwable t) -> {
             Log.e(TAG, "Error loading trailer data: " + t.getMessage());
             setUpNoTrailerAvailableUI();
