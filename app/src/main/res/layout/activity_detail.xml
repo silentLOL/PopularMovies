@@ -180,7 +180,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/trailer_layout" />
 
 
-
             <TextView
                 android:id="@+id/label_original_language_tv"
                 style="@style/DetailLabelSmall"
@@ -222,7 +221,6 @@
                 app:layout_constraintStart_toStartOf="@+id/original_language_tv"
                 tools:text="Hallo zusammen" />
 
-
             <TextView
                 android:id="@+id/label_genres_tv"
                 style="@style/DetailLabelSmall"
@@ -238,10 +236,11 @@
                 style="@style/VoteCountStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/original_title_tv"
                 app:layout_constraintTop_toTopOf="@+id/label_genres_tv"
                 tools:text="Drama, Thriller, Comedy" />
-
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
