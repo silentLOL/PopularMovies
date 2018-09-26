@@ -33,6 +33,11 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="VoteCountStyleRegular">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="VoteCountStyleWhiteItalic">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">12sp</item>

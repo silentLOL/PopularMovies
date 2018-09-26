@@ -11,6 +11,9 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.Iterator;
+import java.util.List;
+
 import at.stefanirndorfer.popularmovies.database.AppDataBase;
 import at.stefanirndorfer.popularmovies.model.Movie;
 import at.stefanirndorfer.popularmovies.model.ReviewsQueryResponse;
@@ -33,7 +36,7 @@ public class DetailActivityViewModel extends InternetAwareViewModel {
 
 
     private MutableLiveData<Bitmap> mImage = new MutableLiveData<>();
-    private MutableLiveData<TrailerQueryResponse> mTrailerQueryResponse = new MutableLiveData<>();
+    private MutableLiveData<List<TrailerData>> mTrailerDataList = new MutableLiveData<>();
     private MutableLiveData<ReviewsQueryResponse> mReviewsQueryResponse = new MutableLiveData<>();
     private MutableLiveData<Throwable> mTrailerRequestError = new MutableLiveData<>();
     private MutableLiveData<Throwable> mReviewsRequestError = new MutableLiveData<>();
@@ -125,12 +128,16 @@ public class DetailActivityViewModel extends InternetAwareViewModel {
     }
 
     private void extractTrailerKeyAndPostData(TrailerQueryResponse result) {
-        for (TrailerData currElem : result.getTrailerData()) {
-            if (currElem.getSite().equals(PREFERRED_VIDEO_SITE)) {
-                mTrailerKey = currElem.getKey();
-                mTrailerQueryResponse.postValue(result);
-                return;
+        List<TrailerData> temTrailerDataList = result.getTrailerData();
+        Iterator<TrailerData> it = temTrailerDataList.iterator();
+        while (it.hasNext()) {
+            if (!it.next().getSite().equals(PREFERRED_VIDEO_SITE)) {
+                it.remove();
             }
+        }
+        if (!temTrailerDataList.isEmpty()) {
+            mTrailerDataList.postValue(temTrailerDataList);
+        } else {
             mTrailerRequestError.postValue(new Throwable("No video of preferred type: " + PREFERRED_VIDEO_SITE + " found"));
         }
     }
@@ -178,9 +185,10 @@ public class DetailActivityViewModel extends InternetAwareViewModel {
         return mIsFavorite;
     }
 
-    public MutableLiveData<TrailerQueryResponse> getTrailerQueryResponse() {
-        return mTrailerQueryResponse;
+    public MutableLiveData<List<TrailerData>> getTrailerQueryResponse() {
+        return mTrailerDataList;
     }
+
     public MutableLiveData<Throwable> getTrailerRequestError() {
         return mTrailerRequestError;
     }
@@ -261,7 +269,6 @@ public class DetailActivityViewModel extends InternetAwareViewModel {
     }
 
     /**
-     *
      * @returns the Key of a movies trailer needed to start trailer-intent
      */
     public String getTrailerKey() {

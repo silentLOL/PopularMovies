@@ -16,17 +16,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Iterator;
+import java.util.List;
+
 import at.stefanirndorfer.popularmovies.R;
 import at.stefanirndorfer.popularmovies.adapter.ReviewsAdapter;
+import at.stefanirndorfer.popularmovies.adapter.TrailersAdapter;
 import at.stefanirndorfer.popularmovies.database.AppDataBase;
 import at.stefanirndorfer.popularmovies.databinding.ActivityDetailBinding;
 import at.stefanirndorfer.popularmovies.model.Movie;
 import at.stefanirndorfer.popularmovies.model.Review;
 import at.stefanirndorfer.popularmovies.model.ReviewsQueryResponse;
+import at.stefanirndorfer.popularmovies.model.TrailerData;
 import at.stefanirndorfer.popularmovies.model.TrailerQueryResponse;
 import at.stefanirndorfer.popularmovies.viewmodel.DetailActivityViewModel;
 
-public class DetailActivity extends AppCompatActivity implements InternetDialogListener, ReviewsAdapter.ReviewListItemClickListener {
+public class DetailActivity extends AppCompatActivity implements InternetDialogListener, ReviewsAdapter.ReviewListItemClickListener, TrailersAdapter.TrailerListItemClickListener {
 
     private static final String TAG = DetailActivity.class.getName();
     private static final String INTERNET_DIALOG_TAG = "internet_dialog_tag";
@@ -35,10 +40,16 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
 
     private DetailActivityViewModel viewModel;
     private ActivityDetailBinding mBinding;
-    private RecyclerView mRecyclerViewReviews;
-    private LinearLayoutManager mLinearLayoutManager;
-    private ReviewsAdapter mReviewAdapter;
 
+    /* Review Recycler View*/
+    private RecyclerView mRecyclerViewReviews;
+    private LinearLayoutManager mLinearLayoutManagerReviews;
+    private ReviewsAdapter mReviewsAdapter;
+
+    /* Trailers Recycler View*/
+    private RecyclerView mRecyclerViewTrailers;
+    private LinearLayoutManager mLinearLayoutManagerTrailers;
+    private TrailersAdapter mTrailersAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +61,8 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         if (movie != null && movie.getTitle() != null) {
             setTitle(movie.getTitle());
         }
-        setUpRecycleView();
+        setUpReviewsRecycleView();
+        setUpTrailersRecycleView();
         initViewModel(movie);
         subscribeOnViewModelDataUpdates();
         // we want to find out if the displayed movie comes from our favorite database by
@@ -58,14 +70,24 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         viewModel.checkInternetConnection();
     }
 
-    private void setUpRecycleView() {
-        Log.d(TAG, "Setting up RecyclerView");
+    private void setUpTrailersRecycleView() {
+        Log.d(TAG, "Setting up TrailerRecyclerView");
+        mRecyclerViewTrailers = findViewById(R.id.recyclerview_trailers);
+        mLinearLayoutManagerTrailers = new LinearLayoutManager(this);
+        mRecyclerViewTrailers.setLayoutManager(mLinearLayoutManagerTrailers);
+        mRecyclerViewTrailers.setHasFixedSize(true);
+        mTrailersAdapter = new TrailersAdapter(this);
+        mRecyclerViewTrailers.setAdapter(mTrailersAdapter);
+    }
+
+    private void setUpReviewsRecycleView() {
+        Log.d(TAG, "Setting up ReviewsRecyclerView");
         mRecyclerViewReviews = findViewById(R.id.recyclerview_reviews);
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerViewReviews.setLayoutManager(mLinearLayoutManager);
+        mLinearLayoutManagerReviews = new LinearLayoutManager(this);
+        mRecyclerViewReviews.setLayoutManager(mLinearLayoutManagerReviews);
         mRecyclerViewReviews.setHasFixedSize(true);
-        mReviewAdapter = new ReviewsAdapter(this);
-        mRecyclerViewReviews.setAdapter(mReviewAdapter);
+        mReviewsAdapter = new ReviewsAdapter(this);
+        mRecyclerViewReviews.setAdapter(mReviewsAdapter);
     }
 
 
@@ -117,10 +139,10 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
     }
 
     private void subscribeOnTrailerData() {
-        final Observer<TrailerQueryResponse> trailerQueryResponseObserver = (TrailerQueryResponse response) -> {
-            //TODO: Implement a RecyclerView and list all trailers -- for now we pick the first one
-            if (response != null && response.getTrailerData() != null && !response.getTrailerData().isEmpty()) {
+        final Observer<List<TrailerData>> trailerQueryResponseObserver = (List<TrailerData> response) -> {
+            if (response != null && !response.isEmpty()) {
                 setUpTrailerUIVisible();
+                mTrailersAdapter.setTrailerData(response.toArray(new TrailerData[0]));
             } else {
                 setUpNoTrailerAvailableUI();
             }
@@ -131,10 +153,9 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
 
     private void subscribeOnReviewData() {
         final Observer<ReviewsQueryResponse> reviewsQueryResponseObserver = (ReviewsQueryResponse response) -> {
-            //TODO: Implement a RecyclerView and list all trailers -- for now we pick the first one
             if (response != null && response.getReviews() != null && !response.getReviews().isEmpty()) {
                 setUpReviewsUIVisible();
-                mReviewAdapter.setReviewData(response.getReviews().toArray(new Review[0]));
+                mReviewsAdapter.setReviewData(response.getReviews().toArray(new Review[0]));
             } else {
                 setUpNoReviewsAvailableUI();
             }
@@ -220,21 +241,18 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         //set LoadingSpinner visible
         mBinding.trailerLayout.trailerErrorTv.setVisibility(View.GONE);
         mBinding.trailerLayout.trailerLoadingPb.setVisibility(View.VISIBLE);
-        mBinding.trailerLayout.playButton.setVisibility(View.GONE);
         mBinding.trailerLayout.trailerLabelTv.setVisibility(View.GONE);
     }
 
     private void setUpTrailerUIVisible() {
         mBinding.trailerLayout.trailerErrorTv.setVisibility(View.GONE);
         mBinding.trailerLayout.trailerLoadingPb.setVisibility(View.GONE);
-        mBinding.trailerLayout.playButton.setVisibility(View.VISIBLE);
         mBinding.trailerLayout.trailerLabelTv.setVisibility(View.VISIBLE);
     }
 
     private void setUpNoTrailerAvailableUI() {
         mBinding.trailerLayout.trailerErrorTv.setVisibility(View.VISIBLE);
         mBinding.trailerLayout.trailerLoadingPb.setVisibility(View.GONE);
-        mBinding.trailerLayout.playButton.setVisibility(View.GONE);
         mBinding.trailerLayout.trailerLabelTv.setVisibility(View.GONE);
     }
 
@@ -296,24 +314,25 @@ public class DetailActivity extends AppCompatActivity implements InternetDialogL
         Log.d(TAG, "onResume");
     }
 
-    public void playTrailer(View view) {
-        String videoId = viewModel.getTrailerKey();
-        Log.d(TAG, WEB_YOUTUBE + videoId);
-        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(VND_YOUTUBE + videoId));
+    @Override
+    public void onReviewListItemClick(int clickedItemIndex, String url) {
+        Log.d(TAG, "Click event on trailer received");
+        Intent intent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse(url));
+        startActivity(intent);
+    }
+
+    @Override
+    public void onTrailerListItemClick(int clickedItemIndex, String key) {
+        Log.d(TAG, "Click event on review received");
+        Log.d(TAG, WEB_YOUTUBE + key);
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(VND_YOUTUBE + key));
         Intent webIntent = new Intent(Intent.ACTION_VIEW,
-                                      Uri.parse(WEB_YOUTUBE + videoId));
+                Uri.parse(WEB_YOUTUBE + key));
         try {
             startActivity(appIntent);
         } catch (ActivityNotFoundException ex) {
             startActivity(webIntent);
         }
-    }
-
-    @Override
-    public void onReviewListItemClick(int clickedItemIndex, String url) {
-        Log.d(TAG, "Click event on trailer received");
-        Intent intent = new Intent(Intent.ACTION_VIEW,
-                                   Uri.parse(url));
-        startActivity(intent);
     }
 }
