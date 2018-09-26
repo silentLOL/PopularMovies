@@ -2,16 +2,20 @@ package at.stefanirndorfer.popularmovies.view;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.List;
 
@@ -69,14 +73,27 @@ public class MainActivity extends AppCompatActivity implements ThumbnailsAdapter
     private void setUpRecycleView() {
         Log.d(TAG, "Setting up RecyclerView");
         mRecyclerViewMovies = findViewById(R.id.recyclerview_movies);
-        mGridLayoutManager = new GridLayoutManager(this, 2);
+        //mGridLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerViewOnScrollListener = initOnScrollListener();
-        mRecyclerViewMovies.setLayoutManager(mGridLayoutManager);
+        //mRecyclerViewMovies.setLayoutManager(mGridLayoutManager);
         mRecyclerViewMovies.setHasFixedSize(true);
         mThumbnailsAdapter = new ThumbnailsAdapter(this);
         mRecyclerViewMovies.setAdapter(mThumbnailsAdapter);
         mRecyclerViewMovies.addOnScrollListener(mRecyclerViewOnScrollListener);
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mGridLayoutManager = new GridLayoutManager(this, 2);
+        } else {
+            mGridLayoutManager = new GridLayoutManager(this, 4);
+        }
+        mRecyclerViewMovies.setLayoutManager(mGridLayoutManager);
     }
+
+    @Override
+    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+
+        return super.onCreateView(parent, name, context, attrs);
+    }
+
 
     private RecyclerView.OnScrollListener initOnScrollListener() {
         return new RecyclerView.OnScrollListener() {
