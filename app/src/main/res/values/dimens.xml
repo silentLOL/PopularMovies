@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="row_margin_top">10dp</dimen>
-    <dimen name="label_width">100dp</dimen>
-    <dimen name="vote_value_size">22sp</dimen>
-    <dimen name="label_text_size">12sp</dimen>
-    <dimen name="detail_tv_padding">20dp</dimen>
-    <dimen name="reviews_list_item_height">36dp</dimen>
-</resources>

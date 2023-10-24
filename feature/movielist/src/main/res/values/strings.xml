@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="popularity_label">"Popularity: "</string>
+    <string name="vote_average_label">"Vote average: "</string>
+</resources>
