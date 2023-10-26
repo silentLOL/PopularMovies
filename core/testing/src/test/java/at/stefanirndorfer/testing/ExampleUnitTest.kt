@@ -1,4 +1,4 @@
-package at.stefanirndorfer.feature.movielist
+package at.stefanirndorfer.testing
 
 import org.junit.Test
 

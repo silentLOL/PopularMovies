@@ -23,6 +23,8 @@ retrofitKotlinxSerializationJson = "1.0.0"
 androidxNavigation = "2.7.4"
 androidxHiltNavigationCompose = "1.0.0"
 coil = "2.4.0"
+kotlinxCoroutines = "1.7.3"
+kotlinTest = "1.9.0"
 
 
 
@@ -49,10 +51,10 @@ appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "a
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-kotlin-serialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerializationJson" }
-retrofit-converter-gson = {group = "com.squareupretrofit2", name = "converter-gson", version.ref = "gsonConverter"}
+retrofit-converter-gson = { group = "com.squareupretrofit2", name = "converter-gson", version.ref = "gsonConverter" }
 
-moshi-converter = {group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "moshiConverter"}
-moshi-kotlin = {group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshiKotlin"}
+moshi-converter = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "moshiConverter" }
+moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshiKotlin" }
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttpLogging" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 
@@ -68,6 +70,9 @@ coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-kt-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-kt-svg = { group = "io.coil-kt", name = "coil-svg", version.ref = "coil" }
 
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version.ref = "kotlinTest" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }
@@ -75,7 +80,7 @@ org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.re
 com-android-library = { id = "com.android.library", version.ref = "agp" }
 
 # hilt
-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt-android"}
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt-android" }
 
 [bundles]
 

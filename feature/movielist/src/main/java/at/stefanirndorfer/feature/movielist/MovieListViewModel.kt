@@ -3,6 +3,7 @@ package at.stefanirndorfer.feature.movielist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.stefanirndorfer.core.data.model.MoviesResponse
+import at.stefanirndorfer.core.data.repository.MoviesRepository
 import at.stefanirndorfer.core.data.repository.MoviesRepositoryImpl
 import at.stefanirndorfer.core.data.util.ResourceState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovieListViewModel @Inject constructor(
-    private val movieListRepository: MoviesRepositoryImpl,
+    private val movieListRepository: MoviesRepository,
 ) : ViewModel() {
     private val _movies: MutableStateFlow<ResourceState<MoviesResponse>> = MutableStateFlow(ResourceState.Loading())
     val movies = _movies.asStateFlow()
