@@ -1,13 +1,12 @@
-package at.stefanirndorfer.core.data.remote
+package at.stefanirndorfer.network.retrofit
 
-import at.stefanirndorfer.core.data.model.MoviesResponse
-import okhttp3.internal.toHeaderList
+import at.stefanirndorfer.network.model.MoviesResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface RemoteMoviesApi {
+interface RemoteMovieApi {
 
     @GET("/3/movie/{sort_by}")
     suspend fun getMovies(

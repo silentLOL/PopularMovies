@@ -46,11 +46,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import at.stefanirndorfer.core.data.model.MovieItem
-import at.stefanirndorfer.core.data.model.MoviesResponse
-import at.stefanirndorfer.core.data.remote.ApiConstants
+import at.stefanirndorfer.core.data.model.Movies
 import at.stefanirndorfer.core.data.util.ResourceState
 import at.stefanirndorfer.designsystem.components.DynamicAsyncImage
 import at.stefanirndorfer.designsystem.theme.PopularMoviesTheme
+import at.stefanirndorfer.feature.movielist.util.Constants
 
 
 const val TAG = "MovieListScreen"
@@ -60,21 +60,21 @@ fun MovieListScreen(
     navController: NavController,
     viewModel: MovieListViewModel = hiltViewModel()
 ) {
-    val moviesResponse by viewModel.movies.collectAsStateWithLifecycle()
+    val movies by viewModel.movies.collectAsStateWithLifecycle()
 
 
-    when (moviesResponse) {
+    when (movies) {
         is ResourceState.Loading -> {
             Log.d(TAG, "Loading")
         }
 
         is ResourceState.Success -> {
             Log.d(TAG, "Success")
-            LazyVerticalStaggeredGridMovies((moviesResponse as ResourceState.Success<MoviesResponse>).data.movies)
+            LazyVerticalStaggeredGridMovies((movies as ResourceState.Success<Movies>).data.movies)
         }
 
         is ResourceState.Error -> {
-            Log.d(TAG, "Error: ${(moviesResponse as ResourceState.Error<MoviesResponse>).error}")
+            Log.d(TAG, "Error: ${(movies as ResourceState.Error<Movies>).error}")
         }
     }
 }
@@ -129,7 +129,7 @@ private fun MovieItemCard(movieItem: MovieItem) {
                         .padding(outerPadding)
                         .width(120.dp)
                 ) {
-                    val thumbnailPath: String = ApiConstants.BASIC_POSTER_PATH + "w185" + movieItem.posterPath
+                    val thumbnailPath: String = Constants.BASIC_POSTER_PATH + Constants.THUMB_NAIL_WIDTH + movieItem.posterPath
                     DynamicAsyncImage(
                         imageUrl = thumbnailPath,
                         contentDescription = "poster of ${movieItem.title}",

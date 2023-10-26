@@ -1,6 +1,6 @@
-package at.stefanirndorfer.core.data.remote
+package at.stefanirndorfer.network
 
-import at.stefanirndorfer.core.data.model.MoviesResponse
+import at.stefanirndorfer.network.model.MoviesResponse
 import retrofit2.Response
 
 interface MoviesDataSource {

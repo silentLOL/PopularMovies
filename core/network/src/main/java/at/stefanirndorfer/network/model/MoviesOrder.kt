@@ -1,4 +1,4 @@
-package at.stefanirndorfer.core.data.model
+package at.stefanirndorfer.network.model
 
 enum class MoviesOrder(val order: String) {
     POPULAR("popular"),

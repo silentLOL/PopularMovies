@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "at.stefanirndorfer.core.data"
+    namespace = "at.stefanirndorfer.network"
     compileSdk = 34
 
     defaultConfig {
@@ -41,6 +41,15 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
+    //retrofit
+    api(libs.retrofit.core)
+    api(libs.retrofit.kotlin.serialization)
+    api(libs.okhttp.logging)
+    api(libs.okhttp)
+    //moshi
+    api(libs.moshi.converter)
+    api(libs.moshi.kotlin)
+
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
@@ -53,8 +62,5 @@ dependencies {
     // hilt  instrumentation testing
     androidTestImplementation(libs.hilt.android.testing)
     kaptAndroidTest(libs.hilt.android.compiler)
-
-    // internal moduels
-    implementation(project(mapOf("path" to ":core:network")))
 
 }

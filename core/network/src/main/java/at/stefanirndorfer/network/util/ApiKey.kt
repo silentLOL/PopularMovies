@@ -1,4 +1,4 @@
-package at.stefanirndorfer.core.data.remote
+package at.stefanirndorfer.network.util
 
 /**
  * not supposed to be part of the repository

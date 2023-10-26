@@ -1,16 +1,13 @@
-package at.stefanirndorfer.core.data.di
+package at.stefanirndorfer.network.di
 
-
-import at.stefanirndorfer.core.data.remote.ApiConstants
-import at.stefanirndorfer.core.data.remote.RemoteMoviesApi
-import at.stefanirndorfer.core.data.repository.MoviesRepositoryImpl
+import at.stefanirndorfer.network.retrofit.RemoteMovieApi
+import at.stefanirndorfer.network.util.ApiConstants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -20,14 +17,15 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DataModule {
+object NetworkModule {
+
 
     @Provides
     @Singleton
     fun provideLoggingInterceptor() = HttpLoggingInterceptor()
-                .apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                }
+        .apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
 
     @Provides
     @Singleton
@@ -45,13 +43,13 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideRemoteMoviesApi(moshi: Moshi, httpClient: OkHttpClient): RemoteMoviesApi {
+    fun provideRemoteMoviesApi(moshi: Moshi, httpClient: OkHttpClient): RemoteMovieApi {
         return Retrofit.Builder()
             .baseUrl(ApiConstants.BASE_URL)
             .client(httpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
-            .create(RemoteMoviesApi::class.java)
+            .create(RemoteMovieApi::class.java)
     }
 
 
