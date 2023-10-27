@@ -199,7 +199,7 @@ private fun MovieItemCard(movieItem: MovieItem) {
                             style = MaterialTheme.typography.bodySmall
                         )
                     } else {
-                        Text(text = movieItem.overview, style = MaterialTheme.typography.bodySmall, maxLines = 3, overflow = TextOverflow.Ellipsis)
+                        Text(text = movieItem.overview, style = MaterialTheme.typography.bodySmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
                     }
 
                 }
