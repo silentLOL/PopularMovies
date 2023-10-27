@@ -20,7 +20,7 @@ class NetworkMonitorImpl @Inject constructor(
     override val isAvailable = callbackFlow {
         val networkStatusCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onUnavailable() {
-                trySend(NetworkStatus.Unavailable).isFailure
+                trySend(NetworkStatus.Unavailable).isSuccess
             }
 
             override fun onAvailable(network: Network) {
@@ -28,7 +28,7 @@ class NetworkMonitorImpl @Inject constructor(
             }
 
             override fun onLost(network: Network) {
-                trySend(NetworkStatus.Unavailable).isFailure
+                trySend(NetworkStatus.Unavailable).isSuccess
             }
         }
 

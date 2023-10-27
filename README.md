@@ -11,6 +11,6 @@
 ### This is a work in progress -- next steps:
 * Test coverage throughout the layers
 * Infinite scrolling by using the api's pagination
-* Bookmarking feature + NavigationRail
+* Bookmarking feature + NavigationBar/Rail
 * Offline first
 * Settings -- e.g. Items order, App Theme ...

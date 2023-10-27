@@ -1,5 +1,8 @@
 package at.stefanirndorfer.popularmovies.ui
 
+import android.util.Log
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
@@ -21,9 +24,11 @@ import kotlinx.coroutines.flow.stateIn
 import movieListNavigationRoute
 import navigateToMovieList
 
+private const val TAG: String = "PMAppState"
 
 @Composable
 fun rememberPMAppState(
+    windowSizeClass: WindowSizeClass,
     networkMonitor: NetworkMonitor,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavHostController = rememberNavController()
@@ -31,11 +36,13 @@ fun rememberPMAppState(
     return remember(
         navController,
         coroutineScope,
+        windowSizeClass,
         networkMonitor
     ) {
         PMAppState(
             navController,
             coroutineScope,
+            windowSizeClass,
             networkMonitor
         )
     }
@@ -45,6 +52,7 @@ fun rememberPMAppState(
 class PMAppState(
     val navController: NavHostController,
     val coroutineScope: CoroutineScope,
+    val windowSizeClass: WindowSizeClass,
     networkMonitor: NetworkMonitor
 ) {
     val currentDestination: NavDestination?
@@ -57,17 +65,31 @@ class PMAppState(
             else -> null
         }
 
+    val shouldShowBottomBar: Boolean
+        get() = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
+
+    // e.g. fold-ables
+    val shouldShowNavRail: Boolean
+        get() = !shouldShowBottomBar
+
     val isOffline: StateFlow<Boolean> = networkMonitor.isAvailable
         .map { available ->
             when (available) {
-                NetworkStatus.Available -> false
-                NetworkStatus.Unavailable -> true
+                is NetworkStatus.Available -> {
+                    Log.d(TAG, "networkMonitor: offline is false")
+                    false
+                }
+
+                else -> {
+                    Log.d(TAG, "networkMonitor: offline is true")
+                    true
+                }
             }
         }
         .stateIn(
             scope = coroutineScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = false,
+            initialValue = true
         )
 
     /**

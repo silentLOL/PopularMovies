@@ -57,4 +57,7 @@ dependencies {
     // coil
     api(libs.coil.kt.compose)
     api(libs.coil.kt.svg)
+
+    // icons extended
+    api(libs.androidx.compose.material.iconsExtended)
 }
