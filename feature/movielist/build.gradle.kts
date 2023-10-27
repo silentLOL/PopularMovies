@@ -50,7 +50,6 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
     testImplementation(libs.junit)
-    testImplementation(project(mapOf("path" to ":core:testing")))
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))
@@ -61,18 +60,18 @@ dependencies {
     testImplementation(libs.kotlin.test)
 
     // my modules
+    testImplementation(project(mapOf("path" to ":core:testing")))
     implementation(project(mapOf("path" to ":core:data")))
     implementation(project(mapOf("path" to ":core:designsystem")))
 
     //hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
+    api(libs.androidx.hilt.navigation.compose)
 
     // lifecycle compose
-    implementation(libs.androidx.lifecycle.livedata.ktx)
-    implementation(libs.androidx.lifecycle.runtimeCompose)
-    implementation(libs.androidx.lifecycle.viewModelCompose)
-
+    api(libs.androidx.lifecycle.livedata.ktx)
+    api(libs.androidx.lifecycle.runtimeCompose)
+    api(libs.androidx.lifecycle.viewModelCompose)
 
 }

@@ -3,7 +3,6 @@ package at.stefanirndorfer.popularmovies
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.rememberCoroutineScope
 import at.stefanirndorfer.core.data.util.NetworkMonitor
 import at.stefanirndorfer.designsystem.theme.PopularMoviesTheme
 import at.stefanirndorfer.popularmovies.ui.PMApp
@@ -19,7 +18,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PopularMoviesTheme {
-                PMApp(rememberCoroutineScope(), networkMonitor)
+                PMApp(networkMonitor)
             }
         }
     }

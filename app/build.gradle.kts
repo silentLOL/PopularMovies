@@ -61,7 +61,6 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
-    implementation(project(mapOf("path" to ":core:data")))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -73,12 +72,14 @@ dependencies {
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // compose navigation
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.testing)
 
     // my modules
+    implementation(project(mapOf("path" to ":core:data")))
     implementation(project(mapOf("path" to ":feature:movielist")))
     implementation(project(mapOf("path" to ":core:designsystem")))
 

@@ -1,100 +1,107 @@
 package at.stefanirndorfer.popularmovies.ui
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.navigation.NavDestination
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import at.stefanirndorfer.feature.movielist.MovieListScreen
+import androidx.navigation.navOptions
+import at.stefanirndorfer.core.data.util.NetworkMonitor
+import at.stefanirndorfer.core.data.util.NetworkStatus
+import at.stefanirndorfer.popularmovies.navigation.TopLevelDestination
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import movieListNavigationRoute
+import navigateToMovieList
 
 
-// Lookup for myself
 @Composable
-fun Navigation() {
-    val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Routes.MOVIE_LIST_SCREEN_ROUTE) {
-        composable(route = Routes.MOVIE_LIST_SCREEN_ROUTE) {
-            MovieListScreen(navController)
-        }
-        composable(
-            route = Screen.DetailScreen.route + "/{name}", // mandatory argument
-            // route = Screen.DetailScreen.route + "?name={name}", // optional argument would go with default value
-            // route = Screen.DetailScreen.route + "/{name}/{age}", // multiple arguments
-            arguments = listOf(
-                navArgument("name") {
-                    type = NavType.StringType
-                    defaultValue = "Stefan"
-                    nullable = true
-                }
-            )
-        ) { entry ->
-            DetailScreen(name = entry.arguments?.getString("name"))
-        }
+fun rememberPMAppState(
+    networkMonitor: NetworkMonitor,
+    coroutineScope: CoroutineScope = rememberCoroutineScope(),
+    navController: NavHostController = rememberNavController()
+): PMAppState {
+    return remember(
+        navController,
+        coroutineScope,
+        networkMonitor
+    ) {
+        PMAppState(
+            navController,
+            coroutineScope,
+            networkMonitor
+        )
     }
 }
 
-// normally not in the navigation file:
-@Composable
-fun MainScreen(navController: NavController) {
-    var text by remember {
-        mutableStateOf("")
-    }
-    Column(
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 50.dp)
-    ) {
-        TextField(
-            value = text,
-            onValueChange = {
-                text = it
-            },
-            modifier = Modifier.fillMaxWidth()
+@Stable
+class PMAppState(
+    val navController: NavHostController,
+    val coroutineScope: CoroutineScope,
+    networkMonitor: NetworkMonitor
+) {
+    val currentDestination: NavDestination?
+        @Composable get() = navController
+            .currentBackStackEntryAsState().value?.destination
+
+    val currentTopLevelDestination: TopLevelDestination?
+        @Composable get() = when (currentDestination?.route) {
+            movieListNavigationRoute -> TopLevelDestination.MOVIE_LIST
+            else -> null
+        }
+
+    val isOffline: StateFlow<Boolean> = networkMonitor.isAvailable
+        .map { available ->
+            when (available) {
+                NetworkStatus.Available -> false
+                NetworkStatus.Unavailable -> true
+            }
+        }
+        .stateIn(
+            scope = coroutineScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = false,
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = {
-                navController.navigate(Screen.DetailScreen.withArgs(text))
-            },
-            modifier = Modifier.align(Alignment.End)
+    /**
+     * Map of top level destinations to be used in the TopBar, BottomBar and NavRail. The key is the
+     * route.
+     */
+    val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.values().asList()
 
-        ) {
-            Text(text = "To next screen")
+    /**
+     * UI logic for navigating to a top level destination in the app. Top level destinations have
+     * only one copy of the destination of the back stack, and save and restore state whenever you
+     * navigate to and from it.
+     *
+     * @param topLevelDestination: The destination the app needs to navigate to.
+     */
+    fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination) {
+        val topLevelNavOptions = navOptions {
+            // Pop up to the start destination of the graph to
+            // avoid building up a large stack of destinations
+            // on the back stack as users select items
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            // Avoid multiple copies of the same destination when
+            // reselecting the same item
+            launchSingleTop = true
+            // Restore state when reselecting a previously selected item
+            restoreState = true
         }
-    }
-}
 
+        when (topLevelDestination) {
+            TopLevelDestination.MOVIE_LIST -> navController.navigateToMovieList(topLevelNavOptions)
+        }
 
-
-@Composable
-fun DetailScreen(name: String?) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Text(text = "Hello $name")
     }
 }
 

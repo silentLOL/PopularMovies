@@ -44,7 +44,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import at.stefanirndorfer.core.data.model.MovieItem
 import at.stefanirndorfer.core.data.model.Movies
 import at.stefanirndorfer.core.data.util.ResourceState
@@ -52,15 +51,23 @@ import at.stefanirndorfer.designsystem.components.DynamicAsyncImage
 import at.stefanirndorfer.designsystem.theme.PopularMoviesTheme
 import at.stefanirndorfer.feature.movielist.util.Constants
 
-
 const val TAG = "MovieListScreen"
 
 @Composable
-fun MovieListScreen(
-    navController: NavController,
+internal fun MovieListRoute(
+    modifier: Modifier = Modifier,
     viewModel: MovieListViewModel = hiltViewModel()
 ) {
     val movies by viewModel.movies.collectAsStateWithLifecycle()
+    MovieListScreen(movies = movies, modifier = modifier)
+}
+
+
+@Composable
+fun MovieListScreen(
+    movies: ResourceState<Movies>,
+    modifier: Modifier
+) {
 
 
     when (movies) {
