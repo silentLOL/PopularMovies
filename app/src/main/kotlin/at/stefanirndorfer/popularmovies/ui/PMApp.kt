@@ -3,6 +3,7 @@
 package at.stefanirndorfer.popularmovies.ui
 
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -23,6 +26,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,7 +55,7 @@ import at.stefanirndorfer.popularmovies.navigation.TopLevelDestination
 
 private const val TAG = "PMApp"
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun PMApp(
     windowSizeClass: WindowSizeClass,
@@ -121,7 +126,12 @@ fun PMApp(
                     // Show the top app bar on top level destinations.
                     val destination = appState.currentTopLevelDestination
                     if (destination != null) {
-
+                        PMTopAppBar(
+                            titleRes = destination.titleTextId,
+                            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                                containerColor = Color.White
+                            )
+                        )
                     }
 
                     PMNavHost(appState = appState, onShowSnackbar = { message, action ->
@@ -137,6 +147,20 @@ fun PMApp(
         }
 
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PMTopAppBar(
+    @StringRes titleRes: Int,
+    modifier: Modifier = Modifier,
+    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+) {
+    CenterAlignedTopAppBar(
+        title = { Text(text = stringResource(id = titleRes)) },
+        colors = colors,
+        modifier = modifier.testTag("PMTopAppBar"),
+    )
 }
 
 @Composable
