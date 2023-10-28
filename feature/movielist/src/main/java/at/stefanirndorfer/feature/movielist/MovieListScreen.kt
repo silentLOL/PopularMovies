@@ -51,7 +51,7 @@ import at.stefanirndorfer.designsystem.components.DynamicAsyncImage
 import at.stefanirndorfer.designsystem.theme.PopularMoviesTheme
 import at.stefanirndorfer.feature.movielist.util.Constants
 
-const val TAG = "MovieListScreen"
+private const val TAG = "MovieListScreen"
 
 @Composable
 internal fun MovieListRoute(

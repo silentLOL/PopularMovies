@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bookmarks">"Bookmarks"</string>
+    <string name="bookmarks_top_bar_title">"Your Bookmarks"</string>
+
+</resources>

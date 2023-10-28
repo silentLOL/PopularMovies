@@ -3,6 +3,7 @@ package at.stefanirndorfer.popularmovies.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import at.stefanirndorfer.bookmarks.navigation.bookmarksScreen
 import at.stefanirndorfer.popularmovies.ui.PMAppState
 import movieListNavigationRoute
 import movieListScreen
@@ -21,5 +22,6 @@ fun PMNavHost(
         modifier = modifier
     ) {
         movieListScreen()
+        bookmarksScreen()
     }
 }

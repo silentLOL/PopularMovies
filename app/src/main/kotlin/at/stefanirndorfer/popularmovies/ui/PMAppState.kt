@@ -13,6 +13,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import at.stefanirndorfer.bookmarks.navigation.bookmarksNavigationRoute
+import at.stefanirndorfer.bookmarks.navigation.navigateToBookmarks
 import at.stefanirndorfer.core.data.util.NetworkMonitor
 import at.stefanirndorfer.core.data.util.NetworkStatus
 import at.stefanirndorfer.popularmovies.navigation.TopLevelDestination
@@ -62,6 +64,7 @@ class PMAppState(
     val currentTopLevelDestination: TopLevelDestination?
         @Composable get() = when (currentDestination?.route) {
             movieListNavigationRoute -> TopLevelDestination.MOVIE_LIST
+            bookmarksNavigationRoute -> TopLevelDestination.BOOKMARKS
             else -> null
         }
 
@@ -122,6 +125,7 @@ class PMAppState(
 
         when (topLevelDestination) {
             TopLevelDestination.MOVIE_LIST -> navController.navigateToMovieList(topLevelNavOptions)
+            TopLevelDestination.BOOKMARKS -> navController.navigateToBookmarks(topLevelNavOptions)
         }
 
     }
