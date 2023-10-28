@@ -16,8 +16,8 @@ enum class TopLevelDestination(
     val titleTextId: Int
 ) {
     MOVIE_LIST(
-      selectedIcon = PMIcons.Upcoming,
-        unselectedIcon = PMIcons.UpcomingBorder,
+        selectedIcon = PMIcons.MovieIcon,
+        unselectedIcon = PMIcons.MovieIconBorder,
         iconTextId = movieListR.string.movie_list,
         titleTextId = R.string.app_name
     ),

@@ -162,12 +162,12 @@ fun PMNavigationRail(
 fun PMNavigationPreview() {
     val items = listOf("Popular Movies", "Your Bookmarks")
     val icons = listOf(
-        PMIcons.UpcomingBorder,
+        PMIcons.MovieIconBorder,
         PMIcons.BookmarksBorder,
         PMIcons.Grid3x3,
     )
     val selectedIcons = listOf(
-        PMIcons.Upcoming,
+        PMIcons.MovieIcon,
         PMIcons.Bookmarks,
         PMIcons.Grid3x3,
     )
