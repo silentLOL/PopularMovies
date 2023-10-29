@@ -48,6 +48,7 @@ import at.stefanirndorfer.core.data.model.MovieItem
 import at.stefanirndorfer.core.data.model.Movies
 import at.stefanirndorfer.core.data.util.ResourceState
 import at.stefanirndorfer.designsystem.components.DynamicAsyncImage
+import at.stefanirndorfer.designsystem.components.PMLoadingSpinner
 import at.stefanirndorfer.designsystem.theme.PopularMoviesTheme
 import at.stefanirndorfer.feature.movielist.util.Constants
 
@@ -73,15 +74,20 @@ fun MovieListScreen(
     when (movies) {
         is ResourceState.Loading -> {
             Log.d(TAG, "Loading")
+            PMLoadingSpinner()
         }
 
         is ResourceState.Success -> {
             Log.d(TAG, "Success")
-            LazyVerticalStaggeredGridMovies((movies as ResourceState.Success<Movies>).data.movies)
+            LazyVerticalStaggeredGridMovies(movies.data.movies)
         }
 
         is ResourceState.Error -> {
-            Log.d(TAG, "Error: ${(movies as ResourceState.Error<Movies>).error}")
+            Log.d(TAG, "Error: ${movies.error}")
+        }
+
+        else -> {
+            Log.w(TAG, "Else branch entered")
         }
     }
 }
