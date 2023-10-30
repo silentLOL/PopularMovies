@@ -54,6 +54,10 @@ dependencies {
     androidTestImplementation(libs.hilt.android.testing)
     kaptAndroidTest(libs.hilt.android.compiler)
 
+    // paging
+    api(libs.paging.runtime.ktx)
+    api(libs.paging.compose)
+
     // internal moduels
     implementation(project(mapOf("path" to ":core:network")))
 

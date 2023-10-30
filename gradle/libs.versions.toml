@@ -24,6 +24,8 @@ androidxNavigation = "2.7.4"
 androidxHiltNavigationCompose = "1.0.0"
 coil = "2.4.0"
 kotlinxCoroutines = "1.7.3"
+pagingRuntimeKtx = "3.2.1"
+pagingCompose = "3.2.1"
 kotlinTest = "1.9.0"
 
 
@@ -67,9 +69,9 @@ androidx-compose-material-iconsExtended = { group = "androidx.compose.material",
 coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-kt-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 coil-kt-svg = { group = "io.coil-kt", name = "coil-svg", version.ref = "coil" }
-
+paging-runtime-ktx = {group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "pagingRuntimeKtx"}
+paging-compose = {group = "androidx.paging", name = "paging-compose", version.ref = "pagingCompose"}
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
-
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version.ref = "kotlinTest" }
 
 [plugins]

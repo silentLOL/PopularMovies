@@ -25,7 +25,7 @@ class MovieListViewModel @Inject constructor(
     }
 
     private fun getMovies() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             movieListRepository.getMostPopularMovies()
                 .collectLatest { moviesResponse ->
                     _movies.value = moviesResponse

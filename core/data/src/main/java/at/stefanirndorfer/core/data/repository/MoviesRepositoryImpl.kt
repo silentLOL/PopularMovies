@@ -1,16 +1,20 @@
 package at.stefanirndorfer.core.data.repository
 
+import at.stefanirndorfer.core.data.di.IoDispatcher
 import at.stefanirndorfer.core.data.model.Movies
 import at.stefanirndorfer.core.data.model.mapToMovieItem
 import at.stefanirndorfer.core.data.util.ResourceState
 import at.stefanirndorfer.network.MoviesDataSource
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class MoviesRepositoryImpl @Inject constructor(
-    private val moviesDataSource: MoviesDataSource
+    private val moviesDataSource: MoviesDataSource,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : MoviesRepository {
     override suspend fun getMostPopularMovies(): Flow<ResourceState<Movies>> {
         return flow {
@@ -29,6 +33,6 @@ class MoviesRepositoryImpl @Inject constructor(
             }
         }.catch { e ->
             emit(ResourceState.Error(e?.localizedMessage ?: "Error when fetching movie data"))
-        }
+        }.flowOn(ioDispatcher)
     }
 }
