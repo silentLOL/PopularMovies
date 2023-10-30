@@ -1,5 +1,6 @@
 package at.stefanirndorfer.core.data.model
 
+import at.stefanirndorfer.database.model.MovieEntity
 import at.stefanirndorfer.network.model.MovieItemResponse
 
 data class MovieItem(
@@ -16,9 +17,10 @@ data class MovieItem(
     val backdropPath: String,
     val originalLanguage: String,
     val originalTitle: String,
-    val genreIds: List<Int>,
+    val genreIds: List<Int>? = emptyList(),
+    val page: Int
 ) {
-    constructor(movieItemResponse: MovieItemResponse) : this(
+    constructor(movieItemResponse: MovieItemResponse, page: Int) : this(
         id = movieItemResponse.id,
         voteCount = movieItemResponse.voteCount,
         voteAverage = movieItemResponse.voteAverage,
@@ -32,10 +34,32 @@ data class MovieItem(
         backdropPath = movieItemResponse.backdropPath,
         originalLanguage = movieItemResponse.originalLanguage,
         originalTitle = movieItemResponse.originalTitle,
-        genreIds = movieItemResponse.genreIds
+        genreIds = movieItemResponse.genreIds,
+        page = page
     )
 
+    constructor(movieEntity: MovieEntity) : this(
+        id = movieEntity.id,
+        voteCount = movieEntity.voteCount,
+        voteAverage = movieEntity.voteAverage,
+        popularity = movieEntity.popularity,
+        hasVideo = movieEntity.hasVideo,
+        isAdult = movieEntity.isAdult,
+        title = movieEntity.title,
+        overview = movieEntity.overview,
+        releaseDate = movieEntity.releaseDate,
+        posterPath = movieEntity.posterPath,
+        backdropPath = movieEntity.backdropPath,
+        originalLanguage = movieEntity.originalLanguage,
+        originalTitle = movieEntity.originalTitle,
+        page = movieEntity.page
+    )
 }
-fun List<MovieItemResponse>.mapToMovieItem(): List<MovieItem> {
+
+fun List<MovieItemResponse>.mapMovieItemResponseToMovieItem(page: Int): List<MovieItem> {
+    return map { MovieItem(it, page) }
+}
+
+fun List<MovieEntity>.mapMovieEntityToMovieItem(): List<MovieItem> {
     return map { MovieItem(it) }
 }

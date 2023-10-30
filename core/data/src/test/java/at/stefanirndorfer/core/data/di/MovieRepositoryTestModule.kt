@@ -1,6 +1,6 @@
 package at.stefanirndorfer.core.data.di
 
-import at.stefanirndorfer.network.MoviesDataSource
+import at.stefanirndorfer.network.RemoteMoviesDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.components.SingletonComponent
@@ -10,7 +10,7 @@ import javax.inject.Singleton
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [MoviesDataSource::class]
+    replaces = [RemoteMoviesDataSource::class]
 )
 abstract class MovieRepositoryTestModule {
 

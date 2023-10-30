@@ -3,11 +3,10 @@ plugins {
     alias(libs.plugins.com.android.library)
     alias(libs.plugins.org.jetbrains.kotlin.android)
     kotlin("kapt")
-    alias(libs.plugins.hilt.android)
 }
 
 android {
-    namespace = "at.stefanirndorfer.core.data"
+    namespace = "at.stefanirndorfer.database"
     compileSdk = 34
 
     defaultConfig {
@@ -41,22 +40,22 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    // hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    // room
+    //implementation(libs.room.runtime)
 
-    // hilt Robolectric
-    testImplementation(libs.hilt.android.testing)
-    kaptTest(libs.hilt.android.compiler)
+    // To use Kotlin annotation processing tool (kapt)
+    kapt(libs.room.compiler)
 
+    // Kotlin Extensions and Coroutines support for Room
+    api(libs.room.ktx)
 
-    // hilt  instrumentation testing
-    androidTestImplementation(libs.hilt.android.testing)
-    kaptAndroidTest(libs.hilt.android.compiler)
+    // Test helpers
+    testImplementation(libs.room.testing)
 
+    // Paging 3 Integration
+    api(libs.room.paging)
 
-    // internal moduels
-    implementation(project(mapOf("path" to ":core:network")))
-    implementation(project(mapOf("path" to ":core:database")))
-
+    // paging
+    api(libs.paging.runtime.ktx)
+    api(libs.paging.compose)
 }

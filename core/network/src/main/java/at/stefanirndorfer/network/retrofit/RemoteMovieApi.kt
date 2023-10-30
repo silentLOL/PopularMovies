@@ -12,7 +12,7 @@ interface RemoteMovieApi {
     suspend fun getMovies(
         @Path("sort_by") sortBy: String?,
         @Query("api_key") api_key: String?,
-        @Query("page") page: Int?
+        @Query("page") page: Int
     ): Response<MoviesResponse>
 
     //

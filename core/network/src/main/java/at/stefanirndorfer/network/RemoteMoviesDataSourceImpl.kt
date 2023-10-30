@@ -7,10 +7,10 @@ import javax.inject.Inject
 
 class RemoteMoviesDataSourceImpl @Inject constructor(
     private val moviesRemoteService: RemoteMovieApi
-) : MoviesDataSource {
-    override suspend fun getMovies() = moviesRemoteService.getMovies(
+) : RemoteMoviesDataSource {
+    override suspend fun getMovies(page: Int) = moviesRemoteService.getMovies(
         sortBy = MoviesOrder.POPULAR.order,
         api_key = ApiKey.API_KEY,
-        1
+        page = page
     )
 }
