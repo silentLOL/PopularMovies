@@ -20,6 +20,11 @@ class MoviesRepositoryImpl @Inject constructor(
 
     // could also be private
     var myUselessVariable: List<String>? = null
+    var myUselessVar0 = 10+ 10 + 10
+    var myUselessVar1 = 10+ 10 + 10
+    var myUselessVar2 = 10+ 10 + 10
+    var myUselessVar3 = 10+ 10 + 10
+    var myUselessVar4 = 10+ 10 + 10
     override suspend fun getMostPopularMovies(): Flow<ResourceState<Movies>> {
 
         // intentionally stupid
