@@ -11,21 +11,8 @@ interface RemoteMovieApi {
     @GET("/3/movie/{sort_by}")
     suspend fun getMovies(
         @Path("sort_by") sortBy: String?,
-        @Query("api_key") api_key: String?,
+        @Query("api_key") apiKey: String?,
         @Query("page") page: Int?
     ): Response<MoviesResponse>
-
-    //
-//    @GET("3/movie/{id}/videos")
-//    fun getTrailerData(
-//        @Path("id") id: String?,
-//        @Query("api_key") api_key: String?
-//    ): Call<TrailerQueryResponse?>?
-//
-//    @GET("3/movie/{id}/reviews")
-//    fun getReviewData(
-//        @Path("id") id: String?,
-//        @Query("api_key") api_key: String?
-//    ): Call<ReviewsQueryResponse?>?
 
 }

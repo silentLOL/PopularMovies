@@ -1,5 +1,6 @@
 package at.stefanirndorfer.core.data.repository
 
+import android.util.Log
 import at.stefanirndorfer.core.data.di.IoDispatcher
 import at.stefanirndorfer.core.data.model.Movies
 import at.stefanirndorfer.core.data.model.mapToMovieItem
@@ -16,7 +17,21 @@ class MoviesRepositoryImpl @Inject constructor(
     private val moviesDataSource: MoviesDataSource,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : MoviesRepository {
+
+    // could also be private
+    var myUselessVariable: List<String>? = null
+    var myUselessVar0 = 10+ 10 + 10
+    var myUselessVar1 = 10+ 10 + 10
+    var myUselessVar2 = 10+ 10 + 10
+    var myUselessVar3 = 10+ 10 + 10
+    var myUselessVar4 = 10+ 10 + 10
     override suspend fun getMostPopularMovies(): Flow<ResourceState<Movies>> {
+
+        // intentionally stupid
+        myUselessVariable!!.forEach {
+            Log.d("this will crash", "i do not exist: $it")
+        }
+
         return flow {
             emit(ResourceState.Loading())
             val response = moviesDataSource.getMovies()
