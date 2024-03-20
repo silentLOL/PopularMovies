@@ -10,7 +10,7 @@ class RemoteMoviesDataSourceImpl @Inject constructor(
 ) : MoviesDataSource {
     override suspend fun getMovies() = moviesRemoteService.getMovies(
         sortBy = MoviesOrder.POPULAR.order,
-        api_key = ApiKey.API_KEY,
+        apiKey = ApiKey.APIKEY,
         1
     )
 }
